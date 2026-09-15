@@ -500,11 +500,22 @@ export function closeCustomerAuthModal(isCancelled = true) {
     backdrop.classList.remove('open');
   }
 
-  if (isCancelled && typeof auth.onAuthCancelCallback === 'function') {
+  if (isCancelled) {
     const cancelCb = auth.onAuthCancelCallback;
     auth.onAuthCancelCallback = null;
     auth.onAuthSuccessCallback = null;
-    cancelCb();
+
+    if (typeof cancelCb === 'function') {
+      cancelCb();
+    } else {
+      // Safety guard: If user is not logged in and tracker or blank view was active, restore storefront
+      const isLogged = auth.isCustomerLoggedIn() || auth.isMerchantLoggedIn();
+      const storefrontView = document.getElementById('view-storefront');
+      const trackerView = document.getElementById('view-tracker');
+      if (!isLogged && (window.store?.getView?.() === 'tracker' || (storefrontView && storefrontView.style.display === 'none' && (!trackerView || trackerView.style.display !== 'block')))) {
+        window.navigateToView?.('storefront');
+      }
+    }
   }
 }
 
@@ -821,6 +832,7 @@ export function updateHeaderAccountUI() {
   const navTracker = document.getElementById('nav-link-tracker');
   const mobTrack = document.getElementById('mob-nav-track');
   const footerTrackerItem = document.getElementById('footer-tracker-item');
+  const heroTrackerBtn = document.getElementById('hero-tracker-btn');
   const hasTrackAccess = !!(customer || isMerchant);
 
   if (navTracker) {
@@ -831,6 +843,14 @@ export function updateHeaderAccountUI() {
   }
   if (footerTrackerItem) {
     footerTrackerItem.style.display = hasTrackAccess ? 'list-item' : 'none';
+  }
+  if (heroTrackerBtn) {
+    heroTrackerBtn.style.display = hasTrackAccess ? 'inline-flex' : 'none';
+  }
+
+  const navLinksDock = document.querySelector('.nav-links');
+  if (navLinksDock) {
+    navLinksDock.style.display = hasTrackAccess ? 'flex' : 'none';
   }
 }
 

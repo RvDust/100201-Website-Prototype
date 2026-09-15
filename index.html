@@ -97,13 +97,6 @@
 
       <!-- Center Floating Pill Navigation Dock -->
       <nav class="nav-links" role="navigation" aria-label="Main Navigation">
-        <a href="#shop" class="nav-link active" id="nav-link-shop">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-          </svg>
-          <span>Shop Kits</span>
-        </a>
         <a href="#tracker" class="nav-link" id="nav-link-tracker" style="display: none;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="1" y="3" width="15" height="13"></rect>
@@ -212,7 +205,7 @@
                 </svg>
                 Browse Collection
               </button>
-              <button class="btn btn-secondary" onclick="window.navigateToView('tracker')">
+              <button class="btn btn-secondary" id="hero-tracker-btn" style="display: none;" onclick="window.navigateToView('tracker')">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="1" y="3" width="15" height="13"></rect>
                   <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>

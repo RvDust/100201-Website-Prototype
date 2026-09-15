@@ -98,7 +98,7 @@ export function trackOrder(orderId) {
           trackOrder(cleanId);
         },
         () => {
-          window.navigateToView?.(prevView);
+          window.navigateToView?.('storefront');
         }
       );
     }

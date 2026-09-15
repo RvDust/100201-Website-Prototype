@@ -357,6 +357,11 @@ input:focus, select:focus, textarea:focus {
   flex-shrink: 0;
 }
 
+.nav-links:empty,
+.nav-links:not(:has(.nav-link:not([style*="display: none"]))) {
+  display: none !important;
+}
+
 .nav-link {
   font-size: 0.82rem;
   font-weight: 600;

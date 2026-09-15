@@ -156,6 +156,23 @@ function setupGlobalNavigation() {
 }
 
 export function navigateToView(viewName, orderIdParam = null) {
+  // Account isolation check: Order tracking strictly requires an authenticated customer or merchant
+  if (viewName === 'tracker' && !auth.isCustomerLoggedIn() && !auth.isMerchantLoggedIn()) {
+    window.showToast?.('Please sign in to track your orders.', 'info');
+    // Ensure storefront is active and displayed
+    navigateToView('storefront');
+    openCustomerAuthModal(
+      'account',
+      () => {
+        navigateToView('tracker', orderIdParam);
+      },
+      () => {
+        navigateToView('storefront');
+      }
+    );
+    return;
+  }
+
   store.setView(viewName);
 
   // Main Sections
@@ -192,14 +209,6 @@ export function navigateToView(viewName, orderIdParam = null) {
     renderAdminDashboard();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else if (viewName === 'tracker') {
-    if (!auth.isCustomerLoggedIn() && !auth.isMerchantLoggedIn()) {
-      window.showToast?.('Please sign in to track your orders.', 'info');
-      openCustomerAuthModal('account', () => {
-        navigateToView('tracker', orderIdParam);
-      });
-      return;
-    }
-
     if (trackerView) trackerView.style.display = 'block';
     if (navTracker) navTracker.classList.add('active');
     if (mobTrack) mobTrack.classList.add('active');
