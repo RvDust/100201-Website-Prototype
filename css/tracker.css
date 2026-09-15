@@ -695,9 +695,44 @@
 }
 
 @media (max-width: 600px) {
+  .tracker-hero h1 {
+    font-size: 1.7rem;
+  }
+  .tracker-search-wrap {
+    flex-direction: column;
+    width: 100%;
+  }
+  .tracker-search-input {
+    width: 100%;
+  }
+  #tracker-search-btn {
+    width: 100%;
+  }
+  .order-meta-id {
+    font-size: 1.3rem;
+    word-break: break-all;
+  }
+  .order-status-badge-lg {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.85rem;
+  }
   .order-tracking-card {
-    padding: 1.25rem;
+    padding: 1rem;
     border-radius: var(--radius-lg);
+  }
+  .pipeline-step {
+    gap: 0.75rem;
+  }
+  .step-node {
+    width: 40px;
+    height: 40px;
+  }
+  .step-title {
+    font-size: 0.85rem;
+    word-break: break-word;
+  }
+  .step-desc {
+    font-size: 0.75rem;
   }
   .order-history-card-header {
     flex-direction: column;

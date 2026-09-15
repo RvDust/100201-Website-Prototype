@@ -667,4 +667,65 @@ body.merchant-logged-in.view-admin #merchant-mode-bar,
   display: none !important;
 }
 
+/* ==========================================================================
+   Responsive Adaptations for Mobile Users
+   ========================================================================== */
+@media (max-width: 600px) {
+  .auth-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .auth-modal-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    padding: 24px 16px !important;
+    margin: 0 !important;
+    max-height: 90vh !important;
+    border-bottom: none;
+    box-sizing: border-box;
+  }
+
+  .auth-modal-close-btn {
+    top: 14px;
+    right: 14px;
+  }
+
+  .auth-modal-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .auth-modal-subtitle {
+    font-size: 0.78rem;
+  }
+
+  .auth-row-2col {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .auth-tab-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .auth-input-wrapper input {
+    font-size: 0.88rem;
+    padding: 10px 12px;
+  }
+
+  .auth-submit-btn {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+
+  .user-account-dropdown {
+    right: 0;
+    max-width: calc(100vw - 20px);
+    width: 275px;
+    padding: 12px;
+  }
+}
+
 

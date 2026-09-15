@@ -62,6 +62,9 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   color-scheme: dark;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 body {
@@ -70,8 +73,21 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+svg {
+  max-width: 100%;
 }
 
 /* Typography */
@@ -79,10 +95,13 @@ h1, h2, h3, h4, .brand-font {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
   font-weight: 700;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 p {
   color: var(--text-secondary);
+  overflow-wrap: break-word;
 }
 
 a {
@@ -108,6 +127,8 @@ input, select, textarea {
   font-size: 0.95rem;
   transition: var(--transition-fast);
   outline: none;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 input:focus, select:focus, textarea:focus {
@@ -116,12 +137,24 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Layout Utilities */
-/* Layout Utilities */
 .container {
   width: 100%;
   max-width: var(--container-width);
   margin: 0 auto;
   padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .container {
+    padding: 0 0.75rem;
+  }
 }
 
 /* Announcement Ticker - Aesthetic Sliding Marquee */
@@ -1026,12 +1059,14 @@ input:focus, select:focus, textarea:focus {
 }
 
 @media (max-width: 768px) {
-  /* Show Mobile Bottom Nav & Add Page Bottom Inset */
+  /* Show Mobile Bottom Nav & Add Page Bottom Inset with Safe Area */
   .mobile-bottom-nav {
     display: flex;
+    height: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   body {
-    padding-bottom: 72px;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
   }
 
   /* Ergonomic Bottom-Sheet Modals on Mobile */
@@ -1061,7 +1096,7 @@ input:focus, select:focus, textarea:focus {
 
   /* Compact header on mobile */
   .brand-name {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
   .brand-hub-tag {
     display: none;
@@ -1091,12 +1126,54 @@ input:focus, select:focus, textarea:focus {
     gap: 1rem;
     padding-right: 1rem;
   }
+  .header-content {
+    height: 54px;
+    gap: 0.5rem;
+  }
+  .header-actions {
+    gap: 0.35rem;
+  }
+  .header-auth-btn {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    gap: 6px;
+  }
+  .cart-trigger-btn {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+  .user-account-dropdown {
+    right: 0;
+    max-width: calc(100vw - 20px);
+    width: 275px;
+    padding: 12px;
+  }
   .footer-grid {
     grid-template-columns: 1fr;
+    gap: 1.75rem;
   }
   .footer-bottom {
     flex-direction: column;
     gap: 0.75rem;
     text-align: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-name {
+    font-size: 0.9rem;
+  }
+  .brand-sub {
+    display: none;
+  }
+  .brand-logo-img {
+    width: 26px;
+    height: 26px;
+  }
+  .header-auth-btn span {
+    max-width: 64px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
