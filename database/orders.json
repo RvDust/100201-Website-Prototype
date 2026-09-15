@@ -1,0 +1,278 @@
+[
+  {
+    "id": "100201-ORD-8141",
+    "date": "2026-09-10T08:00:51.106Z",
+    "customer": {
+      "name": "PRINCESS LOUELLA AGUI",
+      "email": "agui.princess@gmail.com",
+      "phone": "+639617668255",
+      "address": "100201 Football Shop Counter, Ortigas Center, Pasig City",
+      "city": "Makati City",
+      "postalCode": "1213",
+      "country": "Philippines"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-home",
+        "name": "Barcelona '26/'27 Home Kit",
+        "size": "S",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-home-1.jpg",
+        "customization": null
+      }
+    ],
+    "subtotal": 1100,
+    "discount": 0,
+    "shipping": 120,
+    "total": 1220,
+    "paymentMethod": {
+      "type": "gcash",
+      "brand": "GCash",
+      "last4": "8255"
+    },
+    "status": "Order Confirmed",
+    "carrier": "J&T Express / Store Dispatch",
+    "trackingNumber": "JT-100201-908184",
+    "estimatedDelivery": "2-4 Business Days (Nationwide PH)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-10 16:00",
+        "description": "Payment acknowledged by 100201 Football Shop. Jersey reservation secured.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic heat-press printing applied at store workshop.",
+        "completed": false
+      },
+      {
+        "status": "Shipped",
+        "timestamp": null,
+        "description": "Dispatched via courier partner (J&T / LBC Express).",
+        "completed": false
+      },
+      {
+        "status": "Out for Delivery",
+        "timestamp": null,
+        "description": "Courier rider is on delivery route.",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "timestamp": null,
+        "description": "Delivered to recipient address or collected in-store.",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "100201-ORD-2881",
+    "date": "2026-09-10T07:27:52.434Z",
+    "customer": {
+      "name": "PRINCESS LOUELLA AGUI",
+      "email": "agui.princess@gmail.com",
+      "phone": "+639617668255",
+      "address": "Unit 14B, Sapphire Tower, Ortigas Center",
+      "city": "Makati City",
+      "postalCode": "1213",
+      "country": "Philippines"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-aurora-25",
+        "name": "Barcelona '25 Special Aurora Kit",
+        "size": "XL",
+        "quantity": 1,
+        "price": 1200,
+        "image": "assets/products/barca-aurora-1.jpg",
+        "customization": "AGUI #23"
+      }
+    ],
+    "subtotal": 1200,
+    "discount": 0,
+    "shipping": 120,
+    "total": 1320,
+    "paymentMethod": {
+      "type": "maya",
+      "brand": "Maya",
+      "last4": "8255"
+    },
+    "status": "Out for Delivery",
+    "carrier": "J&T Express / Store Dispatch",
+    "trackingNumber": "JT-100201-566998",
+    "estimatedDelivery": "2-4 Business Days (Nationwide PH)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-10 15:27",
+        "description": "Payment acknowledged by 100201 Football Shop. Jersey reservation secured.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": "2026-09-10 15:29",
+        "description": "Authentic heat-press printing applied at store workshop.",
+        "completed": true
+      },
+      {
+        "status": "Shipped",
+        "timestamp": "2026-09-10 15:29",
+        "description": "Dispatched via courier partner (J&T / LBC Express).",
+        "completed": true
+      },
+      {
+        "status": "Out for Delivery",
+        "timestamp": "2026-09-10 15:29",
+        "description": "Courier rider is on delivery route.",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "timestamp": null,
+        "description": "Delivered to recipient address or collected in-store.",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "100201-ORD-5021",
+    "date": "2026-09-10T06:10:00.185Z",
+    "customer": {
+      "name": "Sinaia Rodriguez",
+      "email": "rodzjeanne@gmail.com",
+      "phone": "+639617668255",
+      "address": "100201 Football Shop Counter, Ortigas Center, Pasig City",
+      "city": "Makati City",
+      "postalCode": "1213",
+      "country": "Philippines"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-away",
+        "name": "Barcelona '26/'27 Away Kit",
+        "size": "M",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-away-1.jpg",
+        "customization": "RODRIGUEZ #04"
+      }
+    ],
+    "subtotal": 1100,
+    "discount": 110,
+    "shipping": 120,
+    "total": 1110,
+    "paymentMethod": {
+      "type": "gcash",
+      "brand": "GCash",
+      "last4": "2219"
+    },
+    "status": "Shipped",
+    "carrier": "J&T Express / Store Dispatch",
+    "trackingNumber": "JT-100201-202691",
+    "estimatedDelivery": "2-4 Business Days (Nationwide PH)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-10 14:10",
+        "description": "Payment acknowledged by 100201 Football Shop. Jersey reservation secured.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": "2026-09-10 14:13",
+        "description": "Authentic heat-press printing applied at store workshop.",
+        "completed": true
+      },
+      {
+        "status": "Shipped",
+        "timestamp": "2026-09-10 14:13",
+        "description": "Dispatched via courier partner (J&T / LBC Express).",
+        "completed": true
+      },
+      {
+        "status": "Out for Delivery",
+        "timestamp": null,
+        "description": "Courier rider is on delivery route.",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "timestamp": null,
+        "description": "Delivered to recipient address or collected in-store.",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "100201-ORD-8227",
+    "date": "2026-09-10T05:59:58.790Z",
+    "customer": {
+      "name": "PRINCESS LOUELLA AGUI",
+      "email": "agui.princess@gmail.com",
+      "phone": "+639617668255",
+      "address": "3481 Honda St., brgy. Pinagkaisahan, Makati City",
+      "city": "Makati City",
+      "postalCode": "1213",
+      "country": "Philippines"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-home",
+        "name": "Barcelona '26/'27 Home Kit",
+        "size": "S",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-home-1.jpg",
+        "customization": "AGUI #23"
+      }
+    ],
+    "subtotal": 1100,
+    "discount": 110,
+    "shipping": 120,
+    "total": 1110,
+    "paymentMethod": {
+      "type": "gcash",
+      "brand": "GCash",
+      "last4": "8255"
+    },
+    "status": "Delivered",
+    "carrier": "J&T Express / Store Dispatch",
+    "trackingNumber": "JT-100201-356607",
+    "estimatedDelivery": "Delivered & Received",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-10 13:59",
+        "description": "Payment acknowledged by 100201 Football Shop. Jersey reservation secured.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": "2026-09-10 15:30",
+        "description": "Authentic heat-press printing applied at store workshop.",
+        "completed": true
+      },
+      {
+        "status": "Shipped",
+        "timestamp": "2026-09-11 09:15",
+        "description": "Dispatched via courier partner (J&T / LBC Express).",
+        "completed": true
+      },
+      {
+        "status": "Out for Delivery",
+        "timestamp": "2026-09-12 08:30",
+        "description": "Courier rider is on delivery route.",
+        "completed": true
+      },
+      {
+        "status": "Delivered",
+        "timestamp": "2026-09-12 14:45",
+        "description": "Package delivered and signed by recipient in Makati City.",
+        "completed": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "name": "football-merch-store",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Premium minimalist football kits merchandise store with customer storefront and admin management portal",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["football", "kits", "merchandise", "ecommerce", "admin"],
+  "author": "Antigravity",
+  "license": "MIT"
+}

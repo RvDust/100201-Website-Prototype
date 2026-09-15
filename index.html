@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100201 Football Shop | Official Football Kits & Retro Archive</title>
+  <meta name="description"
+    content="100201 Football Shop (@100201footballshop_) - Curated football kits, club jerseys, and retro legends with on-hand & pre-order delivery across the Philippines.">
+
+  <!-- Shop Favicon -->
+  <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet">
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/storefront.css">
+  <link rel="stylesheet" href="css/cart-checkout.css">
+  <link rel="stylesheet" href="css/tracker.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+  <!-- Top Announcement Ticker - Clean, High-impact Sliding Marquee -->
+  <aside class="ticker-bar" aria-label="Store Announcements">
+    <div class="ticker-wrapper">
+      <div class="ticker-track">
+        <div class="ticker-group">
+          <div class="ticker-highlight">
+            <span class="ticker-pill">LOCAL PICK-UP</span>
+            <span>🇵🇭 In-Store Pick-up &amp; Nationwide Delivery via J&amp;T / LBC</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>⚡ Free Shipping on Orders <strong>₱1,500+</strong></span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>🏷️ Use Code <strong>100201VIP</strong> for 10% Off</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>⚽ 100% Authentic Quality Kits &amp; Player Issue Available</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>🔥 Retro Classics &amp; Legends Archive In Stock</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+        </div>
+        <!-- Cloned group for smooth infinite loop -->
+        <div class="ticker-group" aria-hidden="true">
+          <div class="ticker-highlight">
+            <span class="ticker-pill">LOCAL PICK-UP</span>
+            <span>🇵🇭 In-Store Pick-up &amp; Nationwide Delivery via J&amp;T / LBC</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>⚡ Free Shipping on Orders <strong>₱1,500+</strong></span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>🏷️ Use Code <strong>100201VIP</strong> for 10% Off</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>⚽ 100% Authentic Quality Kits &amp; Player Issue Available</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+          <div class="ticker-highlight">
+            <span>🔥 Retro Classics &amp; Legends Archive In Stock</span>
+          </div>
+          <span class="ticker-divider">&bull;</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sticky Site Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-content">
+      <!-- Brand Logo & Identity -->
+      <div class="brand-wrapper" id="brand-logo-btn" title="100201 Football Shop - Home">
+        <img src="assets/logo.jpg" alt="100201 Football Shop Logo" class="brand-logo-img">
+        <div class="brand-name">
+          100201<span class="brand-sub">FOOTBALL SHOP</span>
+        </div>
+      </div>
+
+      <!-- Center Floating Pill Navigation Dock -->
+      <nav class="nav-links" role="navigation" aria-label="Main Navigation">
+        <a href="#shop" class="nav-link active" id="nav-link-shop">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <span>Shop Kits</span>
+        </a>
+        <a href="#tracker" class="nav-link" id="nav-link-tracker" style="display: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+          <span>Track Order</span>
+        </a>
+      </nav>
+
+      <!-- Right Utility Actions -->
+      <div class="header-actions">
+        <!-- Customer Account / Auth Button & Dropdown (Upper Right Corner) -->
+        <div class="header-auth-wrapper">
+          <button id="user-auth-btn" class="header-auth-btn" aria-label="Sign In or Account"
+            title="Sign In or Create Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="user-auth-label">Sign In</span>
+          </button>
+          <div id="user-account-dropdown" class="user-account-dropdown">
+            <div class="dropdown-user-info">
+              <div class="dropdown-avatar-badge">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="dropdown-user-details">
+                <div id="user-dropdown-name" class="dropdown-name">Customer</div>
+                <div id="user-dropdown-email" class="dropdown-email">customer@mail.com</div>
+              </div>
+            </div>
+            <div class="dropdown-menu-list">
+              <button type="button" id="user-dropdown-tracker" class="dropdown-item-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+                <span>Track My Orders</span>
+              </button>
+              <button type="button" id="user-dropdown-payments" class="dropdown-item-btn" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+                <span>My Payment Options</span>
+              </button>
+              <button type="button" id="user-dropdown-logout" class="dropdown-item-btn logout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart Trigger Button -->
+        <button id="cart-toggle-btn" class="cart-trigger-btn" aria-label="Open Shopping Bag" title="View Bag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-label">Bag</span>
+          <span id="cart-badge-count" class="badge-count" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEW 1: CUSTOMER STOREFRONT -->
+  <main id="view-storefront">
+    <!-- Hero Section - High-impact Editorial Terrace Culture -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-text-block">
+            <div class="hero-eyebrow">
+              AUTHENTIC KITS &amp; RETRO ARCHIVES
+            </div>
+            <h1 class="hero-title">
+              <span>EST 2023.</span><br>
+              <span class="highlight">ON AND OFF THE PITCH.</span>
+            </h1>
+            <p class="hero-description">
+              Your destination for curated club shirts, World Champions editions, and iconic retro archives based in
+              Pasig, Philippines. On-hand physical inventory with nationwide courier dispatch and custom heat-press
+              player
+              names.
+            </p>
+            <div class="hero-actions">
+              <button id="hero-shop-btn" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                Browse Collection
+              </button>
+              <button class="btn btn-secondary" onclick="window.navigateToView('tracker')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+                Track Order
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero Right Column: Pasig Vault Carousel Moving Feature (Real Authentic Kits, Zero AI) -->
+          <div class="hero-spotlight-wrapper">
+            <div class="hero-carousel-card" id="hero-vault-carousel" aria-label="Pasig Vault Featured Shirts">
+              <div class="hero-carousel-track" id="hero-carousel-track">
+                <!-- Slide 1: Newest Drop -->
+                <div class="hero-carousel-slide active" data-index="0">
+                  <img class="hero-card-img" src="assets/products/barca-25-26-1.jpg"
+                    alt="FC Barcelona 2025/26 Home - 100201 Football Shop">
+                  <div class="hero-card-floating-badge">
+                    <span>NEW DROP // PASIG VAULT</span>
+                  </div>
+                  <div class="hero-card-overlay">
+                    <div>
+                      <span class="hero-card-tag new-tag">Newest Release</span>
+                      <div class="hero-card-name">FC Barcelona 2025/26 Home</div>
+                      <div class="hero-card-sub">Official Spotify Edition &bull; On-Hand Physical Stock</div>
+                    </div>
+                    <div class="hero-card-cta-pill">
+                      Explore Drop &rarr;
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Slide 2: Best Seller -->
+                <div class="hero-carousel-slide" data-index="1">
+                  <img class="hero-card-img" src="assets/products/brasil-06-1.jpg"
+                    alt="Brazil 2006 World Cup Retro - 100201 Football Shop">
+                  <div class="hero-card-floating-badge">
+                    <span>BEST SELLER // PASIG VAULT</span>
+                  </div>
+                  <div class="hero-card-overlay">
+                    <div>
+                      <span class="hero-card-tag best-tag">Best Seller</span>
+                      <div class="hero-card-name">Brazil 2006 World Cup</div>
+                      <div class="hero-card-sub">Ronaldo #9 &bull; Verified Physical Stock</div>
+                    </div>
+                    <div class="hero-card-cta-pill">
+                      Explore Archive &rarr;
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Slide 3: Archive Classic -->
+                <div class="hero-carousel-slide" data-index="2">
+                  <img class="hero-card-img" src="assets/products/psg-retro-1.jpg"
+                    alt="PSG Classic Retro Kit - 100201 Football Shop">
+                  <div class="hero-card-floating-badge">
+                    <span>PASIG VAULT // RETRO</span>
+                  </div>
+                  <div class="hero-card-overlay">
+                    <div>
+                      <span class="hero-card-tag retro-tag">Classic Vault</span>
+                      <div class="hero-card-name">PSG Classic Retro</div>
+                      <div class="hero-card-sub">Vintage Fly Emirates &bull; Embroidered Crest</div>
+                    </div>
+                    <div class="hero-card-cta-pill">
+                      Explore Classic &rarr;
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Slide 4: Terrace Streetwear Fit -->
+                <div class="hero-carousel-slide" data-index="3">
+                  <img class="hero-card-img" src="assets/products/portugal-04-3.jpg"
+                    alt="Portugal 2004 Euro Home - 100201 Football Shop">
+                  <div class="hero-card-floating-badge">
+                    <span>TERRACE FIT // PASIG</span>
+                  </div>
+                  <div class="hero-card-overlay">
+                    <div>
+                      <span class="hero-card-tag terrace-tag">Terrace Edition</span>
+                      <div class="hero-card-name">Portugal 2004 Euro Home</div>
+                      <div class="hero-card-sub">C. Ronaldo #17 &bull; On-Model Streetwear Cut</div>
+                    </div>
+                    <div class="hero-card-cta-pill">
+                      Explore Edition &rarr;
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Manual Navigation Arrows -->
+              <button type="button" class="carousel-nav-btn prev" id="hero-carousel-prev"
+                aria-label="Previous Featured Shirt">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button type="button" class="carousel-nav-btn next" id="hero-carousel-next"
+                aria-label="Next Featured Shirt">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+
+              <!-- Indicators Progress Dots -->
+              <div class="carousel-dots-bar" id="hero-carousel-dots">
+                <span class="carousel-dot active" data-index="0"></span>
+                <span class="carousel-dot" data-index="1"></span>
+                <span class="carousel-dot" data-index="2"></span>
+                <span class="carousel-dot" data-index="3"></span>
+              </div>
+            </div>
+
+            <!-- Genuine Perk Chips Below Card -->
+            <div class="spotlight-perks-row">
+              <span class="spotlight-perk-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Physical Stock
+              </span>
+              <span class="spotlight-perk-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Embroidered Badges
+              </span>
+              <span class="spotlight-perk-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Pasig Pick-Up Ready
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Centered Trust Metrics Strip Spanning Underneath -->
+        <div class="hero-stats-strip">
+          <div class="hero-stat-item">
+            <span class="hero-stat-val">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              STORE PICK-UP
+            </span>
+            <span class="hero-stat-lbl">Pick-up Available</span>
+          </div>
+
+          <div class="hero-stat-divider" aria-hidden="true"></div>
+
+          <div class="hero-stat-item">
+            <span class="hero-stat-val">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              NATIONWIDE
+            </span>
+            <span class="hero-stat-lbl">J&amp;T / LBC Delivery</span>
+          </div>
+
+          <div class="hero-stat-divider" aria-hidden="true"></div>
+
+          <div class="hero-stat-item">
+            <span class="hero-stat-val">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              HEAT PRESS
+            </span>
+            <span class="hero-stat-lbl">Custom Name &amp; #</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section class="catalog-section" id="catalog-section">
+      <div class="container">
+        <div class="catalog-header">
+          <div class="catalog-title-row">
+            <div>
+              <h2 class="section-title">Official Football Kits Collection</h2>
+              <p class="section-subtitle" id="catalog-results-count">Loading kits...</p>
+            </div>
+
+            <!-- Search & Sort Controls -->
+            <div class="search-and-sort">
+              <div class="search-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="catalog-search-input" placeholder="Search team, league, season...">
+                <span id="catalog-search-clear" class="search-clear-btn" title="Clear Search">&times;</span>
+              </div>
+
+              <select id="catalog-sort-select" class="sort-select" aria-label="Sort products">
+                <option value="featured">Featured First</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="newest">New Releases First</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Unified Filter Bar -->
+          <div class="filter-bar">
+            <!-- Row 1: League Tabs -->
+            <div class="filter-bar-top">
+              <div class="league-tabs">
+                <button class="league-tab-btn active" data-league="all">All Kits</button>
+                <button class="league-tab-btn" data-league="International">World Cup / Nations</button>
+                <button class="league-tab-btn" data-league="Retro Legends">Retro Archive</button>
+                <button class="league-tab-btn" data-league="Premier League">Premier League</button>
+                <button class="league-tab-btn" data-league="La Liga">La Liga</button>
+                <button class="league-tab-btn" data-league="Serie A">Serie A</button>
+              </div>
+            </div>
+
+            <!-- Row 2: Version Sub-Filter & Active Reset -->
+            <div class="filter-bar-bottom">
+              <div class="type-chips-row">
+                <span class="type-chip-lbl">Version:</span>
+                <button class="type-chip active" data-type="all">All Versions</button>
+                <button class="type-chip" data-type="Home">Home</button>
+                <button class="type-chip" data-type="Away">Away</button>
+                <button class="type-chip" data-type="Retro">Retro Classics</button>
+              </div>
+
+              <div id="filter-reset-wrap" style="display: none;">
+                <button id="active-filter-reset-pill" class="filter-reset-pill">
+                  &times; Reset Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Product Cards Grid -->
+        <div class="products-grid" id="products-grid">
+          <!-- Populated by js/storefront.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MAIN VIEW 2: ADMIN MANAGEMENT PORTAL (RESTRICTED TO AUTHENTICATED MERCHANTS) -->
+  <main id="view-admin" class="admin-section" style="display: none;">
+    <!-- Merchant Login Gate (Shown when unauthenticated) -->
+    <div id="merchant-login-gate" class="merchant-gate-container" style="display: none;">
+      <div class="merchant-login-card">
+        <div class="merchant-badge-restricted">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Restricted Portal
+        </div>
+        <h2>Merchant Sign In</h2>
+        <p class="merchant-desc">
+          Authorized personnel only. Please sign in with your verified merchant credentials to manage inventory, catalog
+          releases, and dispatch statuses.
+        </p>
+
+        <div id="merchant-error-banner" class="merchant-error-banner"></div>
+
+        <form id="merchant-login-form" class="merchant-form">
+          <div class="auth-input-group">
+            <label for="merchant-username">Merchant Email or Username</label>
+            <div class="auth-input-wrapper">
+              <input type="text" id="merchant-username" placeholder="admin@100201footballshop.ph"
+                autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="auth-input-group">
+            <label for="merchant-password">Secure Merchant Password</label>
+            <div class="auth-input-wrapper">
+              <input type="password" id="merchant-password" placeholder="••••••••••••" autocomplete="current-password"
+                required>
+              <button type="button" class="password-reveal-btn" data-target-input="merchant-password"
+                title="Reveal password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="merchant-submit-btn" class="merchant-submit-btn">
+            Access Merchant Dashboard
+          </button>
+        </form>
+
+        <div class="merchant-security-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>Protected with Salted SHA-256 & Brute-Force Rate Limiting</span>
+        </div>
+
+        <div class="merchant-nav-back">
+          <a href="#shop" id="merchant-gate-back-link">
+            &larr; Return to Customer Storefront
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authenticated Merchant Dashboard Content -->
+    <div id="merchant-dashboard-content" style="display: none;">
+      <div class="container">
+        <div class="admin-top-bar">
+          <div>
+            <div class="admin-badge-indicator">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              100201 Admin Control Center
+            </div>
+            <h1 style="font-size: 2rem; margin-top: 0.4rem;">Inventory & Order Management</h1>
+          </div>
+
+          <div class="admin-header-actions">
+            <button id="merchant-logout-admin-btn" class="btn btn-secondary"
+              style="border-color: rgba(244, 63, 94, 0.4); color: #FCA5A5;" title="Lock & Sign Out of Merchant">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Lock Merchant
+            </button>
+            <button id="admin-exit-btn" class="admin-exit-btn" title="Return to Storefront">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              Exit to Storefront
+            </button>
+            <button id="admin-add-product-btn" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add New Kit
+            </button>
+            <button id="admin-reset-data-btn" class="btn btn-secondary" title="Reset to initial 100201 showcase kits">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              Reset Catalog
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Metrics Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Gross Sales</span>
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-revenue-val">₱0</div>
+            <div class="kpi-sub">Total sales volume from placed orders</div>
+          </div>
+
+          <div class="kpi-card kpi-orders">
+            <div class="kpi-header">
+              <span class="kpi-label">Customer Orders</span>
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-orders-val">0</div>
+            <div class="kpi-sub">Total orders processed</div>
+          </div>
+
+          <div class="kpi-card kpi-stock">
+            <div class="kpi-header">
+              <span class="kpi-label">Active Dispatches</span>
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-active-orders-val">0</div>
+            <div class="kpi-sub">In-transit or ready for pick-up</div>
+          </div>
+
+          <div class="kpi-card kpi-products">
+            <div class="kpi-header">
+              <span class="kpi-label">Low Stock Alerts</span>
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                  </path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpi-low-stock-val">0</div>
+            <div class="kpi-sub">Sizes with &lt; 3 units left in inventory</div>
+          </div>
+        </div>
+
+        <!-- Admin Tabs Navigation -->
+        <div class="admin-nav-tabs">
+          <button class="admin-tab-btn active" data-admin-tab="products">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            100201 Catalog
+          </button>
+          <button class="admin-tab-btn" data-admin-tab="orders">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            Orders & Live Statuses
+          </button>
+        </div>
+
+        <!-- TAB A: PRODUCTS CRUD TABLE -->
+        <section id="admin-products-view">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3 class="admin-card-title">All Listed Football Jerseys</h3>
+              <div class="admin-table-controls">
+                <input type="text" id="admin-prod-search" placeholder="Search kit by name, club, season..."
+                  style="height: 36px; font-size: 0.82rem; min-width: 240px;">
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Jersey Details</th>
+                    <th>League / Category</th>
+                    <th>Type</th>
+                    <th>Price</th>
+                    <th>Size Stock (S, M, L, XL, XXL)</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-products-table-body">
+                  <!-- Populated by js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB B: ORDERS MANAGEMENT & STATUS CHANGER TABLE -->
+        <section id="admin-orders-view" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3 class="admin-card-title">Customer Orders & Dispatch Pipeline</h3>
+              <div class="admin-table-controls">
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Filter Status:</span>
+                <select id="admin-order-status-filter" style="height: 36px; font-size: 0.82rem;">
+                  <option value="all">All Orders</option>
+                  <option value="Order Confirmed">Confirmed</option>
+                  <option value="Processing & Custom Printing">Processing & Printing</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Out for Delivery">Out for Delivery</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order ID & Date</th>
+                    <th>Customer Info</th>
+                    <th>Jerseys</th>
+                    <th>Total & Payment</th>
+                    <th>Update Live Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-table-body">
+                  <!-- Populated by js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- MAIN VIEW 3: ORDER STATUS & TRACKING -->
+  <main id="view-tracker" class="tracker-section" style="display: none;">
+    <div class="container">
+      <!-- Back to Storefront Navigation Bar -->
+      <div class="tracker-nav-bar">
+        <button id="tracker-back-to-shop-btn" class="tracker-back-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          &larr; Return to Storefront
+        </button>
+      </div>
+
+      <div class="tracker-hero">
+        <div class="hero-eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          100201 DISPATCH TRACKING
+        </div>
+        <h1>Track Your Shipment</h1>
+        <p>Monitor your kit from dispatch to courier arrival in real time.</p>
+
+        <!-- Search Bar -->
+        <div class="tracker-search-wrap">
+          <input type="text" id="tracker-search-input" class="tracker-search-input"
+            placeholder="ENTER 100201 ORDER ID (E.G. 100201-ORD-8821)">
+          <button id="tracker-search-btn" class="btn btn-primary">Track</button>
+        </div>
+
+        <!-- Quick Recent Orders bar -->
+        <div class="recent-orders-bar" id="tracker-recent-orders-bar">
+          <!-- Populated by js/tracker.js -->
+        </div>
+      </div>
+
+      <!-- Live Order Timeline Card -->
+      <div id="tracker-display-container">
+        <!-- Populated by js/tracker.js -->
+      </div>
+
+      <!-- Separate Container for Order History (Completed Deliveries) -->
+      <section id="tracker-order-history-section" class="tracker-order-history-section" style="display: none;">
+        <div class="order-history-header">
+          <div class="order-history-header-left">
+            <div class="order-history-eyebrow">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              FULFILLED &amp; DELIVERED
+            </div>
+            <h2 class="order-history-title">Order History</h2>
+            <p class="order-history-subtitle">Past completed deliveries, receipts, and order archives.</p>
+          </div>
+          <div class="order-history-count-badge" id="order-history-count-badge">
+            0 Completed
+          </div>
+        </div>
+
+        <div class="order-history-list" id="order-history-list">
+          <!-- Populated by js/tracker.js -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- SLIDE-OUT CART DRAWER -->
+  <div class="cart-drawer-backdrop" id="cart-drawer-backdrop">
+    <div class="cart-drawer" role="dialog" aria-label="Shopping Cart">
+      <div class="cart-header">
+        <div class="cart-title-row">
+          <h3 class="cart-title">100201 Kit Bag</h3>
+          <span class="cart-items-count" id="cart-item-count-text">0 items</span>
+        </div>
+        <button class="modal-close-btn" id="cart-close-btn" aria-label="Close Bag">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Free Shipping Meter -->
+      <div class="free-shipping-meter">
+        <div class="meter-text" id="shipping-meter-text">
+          Add items for <strong>Free Nationwide PH Shipping</strong> over ₱1,500
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="shipping-meter-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Scrollable Cart Items -->
+      <div class="cart-items-list" id="cart-items-list">
+        <!-- Populated by js/cart.js -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="cart-empty-state" id="cart-empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <h4>Your Bag is Empty</h4>
+        <p>Explore 100201's latest on-hand kits & retro drops.</p>
+        <button class="btn btn-primary btn-sm" id="cart-continue-btn">Start Shopping</button>
+      </div>
+
+      <!-- Cart Footer -->
+      <div class="cart-footer" id="cart-footer">
+        <div class="promo-form-row">
+          <input type="text" id="cart-promo-input" class="promo-input" placeholder="PROMO CODE (e.g. 100201VIP)">
+          <button id="cart-promo-apply-btn" class="btn btn-secondary promo-btn">Apply</button>
+        </div>
+
+        <div class="cart-summary-line">
+          <span>Subtotal:</span>
+          <span id="cart-subtotal-val">₱0</span>
+        </div>
+        <div class="cart-summary-line" id="cart-discount-row" style="display: none;">
+          <span>Discount:</span>
+          <span class="discount-val" id="cart-discount-val">-₱0</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Delivery / Pick-up:</span>
+          <span id="cart-shipping-val">FREE</span>
+        </div>
+        <div class="cart-summary-line total-line">
+          <span>Estimated Total:</span>
+          <span id="cart-total-val">₱0</span>
+        </div>
+
+        <button id="cart-checkout-btn" class="btn btn-primary btn-block" style="margin-top: 1rem;">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GUIDED 2-STEP CHECKOUT MODAL -->
+  <div class="modal-backdrop" id="checkout-modal-backdrop">
+    <div class="modal-content checkout-modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">100201 Secure Checkout</h3>
+        <button class="modal-close-btn" id="close-checkout-btn" aria-label="Close Checkout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div id="checkout-form-section">
+          <!-- Step Indicator Navigator -->
+          <div class="checkout-steps-nav">
+            <div class="checkout-step-indicator active" id="step-nav-1">
+              <span class="step-circle">1</span>
+              <span>1. Fulfillment & Details</span>
+            </div>
+            <span class="step-connector-arrow">&rarr;</span>
+            <div class="checkout-step-indicator" id="step-nav-2">
+              <span class="step-circle">2</span>
+              <span>2. Payment & Confirm</span>
+            </div>
+          </div>
+
+          <!-- Order Summary Breakdown (Always Visible) -->
+          <div id="checkout-summary-breakdown"></div>
+
+          <form id="checkout-form">
+            <!-- STEP 1: FULFILLMENT & CONTACT DESTINATION -->
+            <div id="checkout-step-1">
+              <div class="checkout-section-header">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Choose Fulfillment Method
+              </div>
+
+              <div class="fulfillment-toggle-grid">
+                <button type="button" class="fulfillment-card-btn active" id="fulfillment-btn-delivery"
+                  data-mode="delivery">
+                  <div class="fulfillment-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="1" y="3" width="15" height="13"></rect>
+                      <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="fulfillment-text-title">Nationwide Delivery</div>
+                    <div class="fulfillment-text-desc">J&T Express / LBC to your doorstep</div>
+                  </div>
+                </button>
+
+                <button type="button" class="fulfillment-card-btn" id="fulfillment-btn-pickup" data-mode="pickup">
+                  <div class="fulfillment-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="fulfillment-text-title">In-Store Pick-up</div>
+                    <div class="fulfillment-text-desc">Same-day collection at our store counter</div>
+                  </div>
+                </button>
+              </div>
+
+              <div class="checkout-grid-2">
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="checkout-name">Full Name *</label>
+                  <input type="text" id="checkout-name" placeholder="e.g. Juan Carlo Bautista" required>
+                </div>
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="checkout-email">Email Address *</label>
+                  <input type="email" id="checkout-email" placeholder="e.g. juan@example.com" required>
+                </div>
+              </div>
+
+              <div class="checkout-grid-2">
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="checkout-phone">Mobile Number (GCash / Courier SMS) *</label>
+                  <input type="text" id="checkout-phone" placeholder="e.g. 0917-555-1201" required>
+                </div>
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="checkout-city">City / Municipality *</label>
+                  <input type="text" id="checkout-city" placeholder="e.g. Pasig City" required>
+                </div>
+              </div>
+
+              <div class="checkout-form-group" id="checkout-address-group">
+                <label class="checkout-form-label" for="checkout-address" id="checkout-address-label">Delivery Street
+                  Address *</label>
+                <input type="text" id="checkout-address" placeholder="e.g. Unit 14B, Sapphire Tower, Ortigas Center"
+                  required>
+              </div>
+
+              <div class="checkout-grid-2" style="margin-bottom: 1.5rem;">
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="checkout-postal">Postal Code</label>
+                  <input type="text" id="checkout-postal" placeholder="e.g. 1600">
+                </div>
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="checkout-country">Country</label>
+                  <input type="text" id="checkout-country" value="Philippines" readonly style="opacity: 0.7;">
+                </div>
+              </div>
+
+              <button type="button" id="checkout-goto-step-2-btn" class="btn btn-primary btn-block"
+                style="font-size: 0.95rem;">
+                Continue to Payment &rarr;
+              </button>
+            </div>
+
+            <!-- STEP 2: PAYMENT METHOD & FINAL ORDER PLACEMENT -->
+            <div id="checkout-step-2" style="display: none;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <div class="checkout-section-header" style="margin-bottom: 0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                  Select Payment Option
+                </div>
+                <button type="button" id="checkout-back-to-step-1-btn" class="btn btn-secondary btn-sm">
+                  &larr; Back to Details
+                </button>
+              </div>
+
+              <!-- List of Saved / Available Payment Methods -->
+              <div class="payment-methods-list" id="checkout-payment-methods-list">
+                <!-- Rendered by js/cart.js -->
+              </div>
+
+              <!-- Philippine Payment Instructions Callout -->
+              <div class="ph-payment-instruction-box" id="ph-payment-callout">
+                <div><strong>🇵🇭 Fast & Secure Philippines Settlement:</strong></div>
+                <div>For GCash / Maya, scan the QR code or send payment to <strong>0917-555-1201 (100201 Football
+                    Shop)</strong>. Your order is registered immediately and tracked in real time.</div>
+              </div>
+
+              <button type="button" id="checkout-toggle-add-pm-btn" class="btn btn-secondary btn-sm"
+                style="margin-bottom: 1rem;">
+                + Add or Use Another Payment Option
+              </button>
+
+              <!-- Inline New Payment Method Form -->
+              <div id="checkout-new-pm-box" class="add-payment-box collapsed">
+                <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--accent-pitch);">
+                  Add New Payment Method
+                </div>
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="new-pm-type">Option Type</label>
+                  <select id="new-pm-type" style="width: 100%;">
+                    <option value="gcash">GCash (Mobile Wallet)</option>
+                    <option value="maya">Maya (PayMaya)</option>
+                    <option value="bdo">BDO Bank Transfer</option>
+                    <option value="card">Credit / Debit Card</option>
+                  </select>
+                </div>
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="new-card-holder">Account Name / Cardholder</label>
+                  <input type="text" id="new-card-holder" placeholder="e.g. Juan Carlo Bautista">
+                </div>
+                <div class="checkout-form-group">
+                  <label class="checkout-form-label" for="new-card-number">Account / Mobile Number</label>
+                  <input type="text" id="new-card-number" placeholder="e.g. 0917-XXX-XXXX or Card #">
+                </div>
+                <label
+                  style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer;">
+                  <input type="checkbox" id="new-card-save-default" checked>
+                  Save this as my default payment option
+                </label>
+              </div>
+
+              <button type="submit" id="checkout-place-order-btn" class="btn btn-primary btn-block"
+                style="margin-top: 1rem; font-size: 1rem; height: 46px;">
+                Place Order &bull; ₱0
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="checkout-confirmation-section" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK VIEW PRODUCT MODAL -->
+  <div class="modal-backdrop" id="quickview-modal-backdrop">
+    <div class="modal-content" style="max-width: 820px;">
+      <div class="modal-header">
+        <span
+          style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">
+          100201 Football Kit Customizer
+        </span>
+        <button class="modal-close-btn" id="close-quickview-btn" aria-label="Close Modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" id="quickview-modal-body">
+        <!-- Rendered by js/storefront.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- OFFICIAL SIZE CHART MODAL -->
+  <div class="modal-backdrop" id="sizechart-modal-backdrop">
+    <div class="modal-content" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Official Kit Size Guide</h3>
+        <button class="modal-close-btn" id="close-sizechart-btn" aria-label="Close Size Chart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.85rem;">
+          Pit-to-pit chest width and collar-to-hem length for standard fan & player shirts.
+        </p>
+        <table class="size-guide-table">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Chest Width</th>
+              <th>Length</th>
+              <th>Rec. Height</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>S</strong></td>
+              <td>19.5" (50 cm)</td>
+              <td>27.5" (70 cm)</td>
+              <td>5'4" &ndash; 5'7"</td>
+            </tr>
+            <tr>
+              <td><strong>M</strong></td>
+              <td>20.5" (52 cm)</td>
+              <td>28.5" (72 cm)</td>
+              <td>5'7" &ndash; 5'10"</td>
+            </tr>
+            <tr>
+              <td><strong>L</strong></td>
+              <td>21.5" (55 cm)</td>
+              <td>29.5" (75 cm)</td>
+              <td>5'10" &ndash; 6'0"</td>
+            </tr>
+            <tr>
+              <td><strong>XL</strong></td>
+              <td>22.5" (57 cm)</td>
+              <td>30.5" (78 cm)</td>
+              <td>6'0" &ndash; 6'2"</td>
+            </tr>
+            <tr>
+              <td><strong>XXL</strong></td>
+              <td>23.5" (60 cm)</td>
+              <td>31.5" (80 cm)</td>
+              <td>6'2"+</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="size-guide-tip">
+          💡 <strong>Store Fitting Tip:</strong>
+          Fan version jerseys fit true to size. For an oversized terrace/streetwear fit, size up one size.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUYER ACCOUNT PAYMENT METHODS MODAL -->
+  <div class="modal-backdrop" id="payments-modal-backdrop">
+    <div class="modal-content" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <span class="auth-modal-badge" style="margin-bottom: 0.25rem;">Buyer Account</span>
+          <h3 class="modal-title" id="payments-modal-title">My Saved Payment Options</h3>
+        </div>
+        <button class="modal-close-btn" id="close-payments-modal-btn" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="payments-modal-subtitle"
+          style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          Manage saved GCash, Maya, Bank Transfer, or card options for your buyer account.
+        </p>
+
+        <div id="payments-manager-list" class="payment-methods-list">
+          <!-- Rendered by js/payments.js for this specific buyer account -->
+        </div>
+
+        <button id="modal-toggle-add-pm-btn" class="btn btn-secondary btn-block" style="margin-top: 1rem;">
+          + Add New Payment Method
+        </button>
+
+        <div id="modal-add-pm-form-box" class="add-payment-box collapsed">
+          <form id="modal-add-pm-form">
+            <div class="checkout-form-group">
+              <label class="checkout-form-label" for="modal-pm-type">Payment Type</label>
+              <select id="modal-pm-type" style="width: 100%;">
+                <option value="gcash">GCash (Philippines)</option>
+                <option value="maya">Maya (PayMaya)</option>
+                <option value="bdo">BDO Bank Transfer</option>
+                <option value="card">Credit / Debit Card</option>
+              </select>
+            </div>
+            <div class="checkout-form-group">
+              <label class="checkout-form-label" for="modal-pm-holder">Account / Holder Name</label>
+              <input type="text" id="modal-pm-holder" placeholder="e.g. Juan Carlo Bautista" required>
+            </div>
+            <div class="checkout-form-group">
+              <label class="checkout-form-label" for="modal-pm-number">Mobile Number or Account / Card Number</label>
+              <input type="text" id="modal-pm-number" placeholder="0917-XXX-XXXX" required>
+            </div>
+            <label
+              style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1rem; cursor: pointer;">
+              <input type="checkbox" id="modal-pm-default" checked>
+              Set as default checkout option
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Save to My Account</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOMER AUTHENTICATION MODAL (LOGIN & REGISTER) -->
+  <div class="auth-modal-backdrop" id="customer-auth-modal-backdrop" role="dialog" aria-modal="true"
+    aria-labelledby="auth-modal-title">
+    <div class="auth-modal-card">
+      <button type="button" class="auth-modal-close-btn" id="close-auth-modal-btn"
+        aria-label="Close Authentication Modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Prompt Notice for Checkout Interception -->
+      <div id="auth-checkout-prompt" class="auth-checkout-prompt" style="display: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <div class="auth-checkout-prompt-text">
+          <h4>Sign in to Checkout</h4>
+          <p>Please sign in or create an account to finalize shipping details and confirm your football kit order.</p>
+        </div>
+      </div>
+
+      <div class="auth-modal-header">
+        <span class="auth-modal-badge" id="auth-modal-badge">100201 Football Shop</span>
+        <h2 id="auth-modal-title">Log In</h2>
+        <p id="auth-modal-subtitle" class="auth-modal-subtitle">Welcome back &bull; Sign in to your account</p>
+      </div>
+
+      <!-- Sign In vs Register Switcher Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button type="button" id="auth-tab-login" class="auth-tab-btn active" role="tab" aria-selected="true">Sign
+          In</button>
+        <button type="button" id="auth-tab-register" class="auth-tab-btn" role="tab" aria-selected="false">Create
+          Account</button>
+      </div>
+
+      <!-- Error banner -->
+      <div id="auth-error-banner" class="auth-error-banner"></div>
+
+      <!-- Form A: Unified Sign In (Auto-recognizes Customer or Merchant) -->
+      <form id="auth-form-login" class="auth-form">
+        <div class="auth-input-group">
+          <label for="login-email">Email Address or Username</label>
+          <div class="auth-input-wrapper">
+            <input type="text" id="login-email" placeholder="e.g. juan@example.com or admin" autocomplete="username"
+              required>
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label for="login-password">Password</label>
+          <div class="auth-input-wrapper">
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="password-reveal-btn" data-target-input="login-password" title="Show password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn">
+          Sign In
+        </button>
+
+        <p class="auth-footer-help">
+          Auto-recognizes Customer and Merchant credentials &amp; redirects automatically.
+        </p>
+      </form>
+
+      <!-- Form B: Customer Registration -->
+      <form id="auth-form-register" class="auth-form" style="display: none;">
+        <div class="auth-input-group">
+          <label for="reg-name">Full Name *</label>
+          <div class="auth-input-wrapper">
+            <input type="text" id="reg-name" placeholder="e.g. Juan Carlo Bautista" autocomplete="name" required>
+          </div>
+        </div>
+
+        <div class="auth-row-2col">
+          <div class="auth-input-group">
+            <label for="reg-email">Email Address *</label>
+            <div class="auth-input-wrapper">
+              <input type="email" id="reg-email" placeholder="name@email.com" autocomplete="email" required>
+            </div>
+          </div>
+          <div class="auth-input-group">
+            <label for="reg-phone">Phone / GCash *</label>
+            <div class="auth-input-wrapper">
+              <input type="text" id="reg-phone" placeholder="0917-XXX-XXXX" autocomplete="tel" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label for="reg-address">Default Delivery Street Address</label>
+          <div class="auth-input-wrapper">
+            <input type="text" id="reg-address" placeholder="Unit, House/Street, Barangay"
+              autocomplete="street-address">
+          </div>
+        </div>
+
+        <div class="auth-row-2col">
+          <div class="auth-input-group">
+            <label for="reg-city">City / Municipality</label>
+            <div class="auth-input-wrapper">
+              <input type="text" id="reg-city" placeholder="Pasig City" value="Pasig City"
+                autocomplete="address-level2">
+            </div>
+          </div>
+          <div class="auth-input-group">
+            <label for="reg-postal">Postal Code</label>
+            <div class="auth-input-wrapper">
+              <input type="text" id="reg-postal" placeholder="1600" value="1600" autocomplete="postal-code">
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-row-2col">
+          <div class="auth-input-group">
+            <label for="reg-password">Password (min 6 chars) *</label>
+            <div class="auth-input-wrapper">
+              <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password" minlength="6"
+                required>
+              <button type="button" class="password-reveal-btn" data-target-input="reg-password" title="Show password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="auth-input-group">
+            <label for="reg-confirm-password">Confirm Password *</label>
+            <div class="auth-input-wrapper">
+              <input type="password" id="reg-confirm-password" placeholder="••••••••" autocomplete="new-password"
+                minlength="6" required>
+              <button type="button" class="password-reveal-btn" data-target-input="reg-confirm-password"
+                title="Show password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn">
+          Create Account & Sign In
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN: ADD / EDIT PRODUCT MODAL -->
+  <div class="modal-backdrop" id="product-modal-backdrop">
+    <div class="modal-content product-crud-modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="crud-modal-badge">100201 Merchant Inventory</span>
+          <h3 class="modal-title" id="product-modal-title">Edit Kit</h3>
+        </div>
+        <button class="modal-close-btn" id="close-product-modal-btn" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="product-crud-form">
+        <div class="modal-body crud-modal-body">
+          <!-- Row 1: Title & Club -->
+          <div class="crud-grid-2">
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-name">Jersey Title *</label>
+              <input type="text" id="crud-name" placeholder="e.g. Barcelona '26/'27 Home Kit" required>
+            </div>
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-club">Club / National Team *</label>
+              <input type="text" id="crud-club" placeholder="e.g. FC Barcelona" required>
+            </div>
+          </div>
+
+          <!-- Row 2: League, Season, Type -->
+          <div class="crud-grid-3">
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-league">Category / League</label>
+              <select id="crud-league">
+                <!-- Dynamically populated by js/admin.js -->
+              </select>
+            </div>
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-season">Season</label>
+              <input type="text" id="crud-season" value="2026/27" placeholder="e.g. 2026/27">
+            </div>
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-type">Type / Version</label>
+              <select id="crud-type">
+                <option value="Home">Home</option>
+                <option value="Away">Away</option>
+                <option value="Third">Third</option>
+                <option value="Retro">Retro Classics</option>
+                <option value="Special">Special Edition</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 3: Price, Original Price, Badge Tag -->
+          <div class="crud-grid-3">
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-price">Price (₱ PHP) *</label>
+              <input type="number" id="crud-price" min="1" step="1" value="1100" required>
+            </div>
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-original-price">Original Price (₱)</label>
+              <input type="number" id="crud-original-price" min="1" step="1" value="1300"
+                placeholder="Optional strikethrough">
+            </div>
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-badge">Badge Tag</label>
+              <input type="text" id="crud-badge" placeholder="e.g. NEW DROP // PASIG VAULT">
+            </div>
+          </div>
+
+          <!-- Row 4: Availability & Showcase Flags -->
+          <div class="crud-grid-2">
+            <div class="crud-form-group">
+              <label class="crud-form-label" for="crud-availability">Availability Status</label>
+              <select id="crud-availability">
+                <option value="Pre-Order (2-3 Weeks)">⚡ Pre-Order (2-3 Weeks Lead Time)</option>
+                <option value="On-Hand Ready to Ship">✓ On-Hand Ready to Ship (Pasig Hub)</option>
+                <option value="Store Pick-up Ready">📦 Pasig Dispatch Pick-up Only</option>
+                <option value="Limited Vault Archive">⭐ Limited Archive Vault</option>
+              </select>
+            </div>
+            <div class="crud-form-group">
+              <label class="crud-form-label">Showcase & Badges</label>
+              <div class="crud-toggles-row">
+                <label class="crud-checkbox-label">
+                  <input type="checkbox" id="crud-featured">
+                  <span>Featured in Hero Showcase</span>
+                </label>
+                <label class="crud-checkbox-label">
+                  <input type="checkbox" id="crud-is-new">
+                  <span>Mark as New Drop</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 5: Stock distribution per size with live dynamic total -->
+          <div class="crud-form-group">
+            <div class="crud-label-with-meta">
+              <label class="crud-form-label" style="margin-bottom: 0;">Stock by Size (Units in Inventory)</label>
+              <span id="crud-total-stock-badge" class="stock-total-badge">Total: 34 units</span>
+            </div>
+            <div class="stock-inputs-grid">
+              <div class="stock-input-item">
+                <label for="crud-stock-s">S</label>
+                <input type="number" id="crud-stock-s" min="0" value="5">
+              </div>
+              <div class="stock-input-item">
+                <label for="crud-stock-m">M</label>
+                <input type="number" id="crud-stock-m" min="0" value="8">
+              </div>
+              <div class="stock-input-item">
+                <label for="crud-stock-l">L</label>
+                <input type="number" id="crud-stock-l" min="0" value="12">
+              </div>
+              <div class="stock-input-item">
+                <label for="crud-stock-xl">XL</label>
+                <input type="number" id="crud-stock-xl" min="0" value="6">
+              </div>
+              <div class="stock-input-item">
+                <label for="crud-stock-xxl">XXL</label>
+                <input type="number" id="crud-stock-xxl" min="0" value="3">
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 6: Image URL & Dynamic Photography Picker -->
+          <div class="crud-form-group">
+            <label class="crud-form-label" for="crud-img-url">Primary Jersey Image (Hanger Photography)</label>
+            <div class="crud-image-input-wrap">
+              <input type="text" id="crud-img-url" placeholder="assets/products/... or image URL" required>
+              <div class="crud-preview-box">
+                <img id="crud-img-preview" src="assets/products/barca-2627-home-1.jpg" alt="Preview"
+                  onerror="this.src='assets/logo.jpg'">
+              </div>
+            </div>
+
+            <!-- Dynamic Multi-Photo Gallery angles for this kit -->
+            <div class="crud-gallery-section" id="crud-gallery-section">
+              <div class="crud-label-with-meta" style="margin-top: 0.8rem;">
+                <label class="crud-form-label" style="margin-bottom: 0;">Multi-Angle Photo Gallery (Front, Back,
+                  Details)</label>
+                <span id="crud-gallery-count-badge" class="gallery-count-badge">2 angles</span>
+              </div>
+              <div class="crud-gallery-chips" id="crud-gallery-chips-container">
+                <!-- Rendered dynamically by js/admin.js -->
+              </div>
+            </div>
+
+            <!-- Dynamic 100201 Real Kits Photography Preset Picker -->
+            <div class="crud-presets-section">
+              <div class="crud-presets-header">
+                <div>
+                  <span class="crud-sub-title">100201 Authentic Photography Archive:</span>
+                  <p class="crud-sub-desc">Click any actual wooden hanger photo to assign as kit image</p>
+                </div>
+                <div class="preset-filter-box">
+                  <input type="text" id="preset-search-input" placeholder="Search kit photo..." autocomplete="off">
+                </div>
+              </div>
+              <div class="image-preset-picker" id="image-preset-picker-container">
+                <!-- Rendered dynamically with real 100201 images -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 7: Description & Pre-order Notes -->
+          <div class="crud-form-group">
+            <label class="crud-form-label" for="crud-desc">Product Description & Pre-order Notes</label>
+            <textarea id="crud-desc" rows="3"
+              placeholder="Describe kit details, fabric features, sponsor marks, and pre-order turnaround (2-3 weeks)..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer crud-modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-product-modal-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-product-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span id="save-product-btn-text">Save Kit to Inventory</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FLOATING TOAST NOTIFICATIONS CONTAINER -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-wrapper">
+            <img src="assets/logo.jpg" alt="100201 Football Shop Logo" class="brand-logo-img">
+            <div class="brand-name">
+              100201<span>FOOTBALL SHOP</span>
+            </div>
+          </div>
+          <p>
+            Official merchandise hub for football shirts, world champions editions, and legendary throwback retros.
+            Based in Pasig City, Philippines.
+          </p>
+          <div class="footer-social-links"
+            style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.55rem;">
+            <a href="https://www.instagram.com/100201footballshop_" target="_blank" rel="noopener noreferrer"
+              class="footer-social-link">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+              <span>Instagram: @100201footballshop_</span>
+            </a>
+            <a href="https://www.facebook.com/justthriftphl" target="_blank" rel="noopener noreferrer"
+              class="footer-social-link">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+              <span>Facebook: 100201</span>
+            </a>
+            <a href="https://www.tiktok.com/@100201footballshop?fbclid=IwcGRvZgVleHRuA2FlbQIxMABicmlkETFkWTIwMFpjNE5Vb1M2U3NVc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHo6P7Sj_Fsqv2edyiNNJOntxYEZC_pZtuXR_xEzjiQzlqyMWQFB3tRhz5Zk4_aem_CoQufJ-BhEU5FGen0fhN0g"
+              target="_blank" rel="noopener noreferrer" class="footer-social-link">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.46V11.2a8.28 8.28 0 0 0 5.77 2.27V10.02a4.88 4.88 0 0 1-3.77-3.33h3.77z" />
+              </svg>
+              <span>TikTok: @100201footballshop</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>100201 Navigation</h5>
+          <ul>
+            <li><a href="#shop" data-nav-target="storefront">Latest Kits Drop</a></li>
+            <li><a href="#retro" data-nav-target="storefront">Retro Archive</a></li>
+            <li id="footer-tracker-item" style="display: none;"><a href="#tracker" data-nav-target="tracker">Live Shipment Tracker</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Merchant Controls</h5>
+          <ul>
+            <li><a href="#admin" data-nav-target="admin">Merchant Portal</a></li>
+            <li><a href="#admin" data-nav-target="admin">Inventory & Stock</a></li>
+            <li><a href="#admin" data-nav-target="admin">Order Status Manager</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Payment & Fulfillment</h5>
+          <ul>
+            <li><span>🇵🇭 GCash &bull; Maya &bull; BDO</span></li>
+            <li><span>📍 In-Store Pick-up</span></li>
+            <li><span>⚡ J&T Express &bull; LBC</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 100201 Football Shop (@100201footballshop_). All rights reserved.</div>
+        <div style="display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;">
+          <span>Pre-Order Policy</span>
+          <span>Store Pick-up Terms</span>
+          <a href="https://www.instagram.com/100201footballshop_" target="_blank" rel="noopener noreferrer"
+            style="color: var(--accent-pitch);">Instagram</a>
+          <a href="https://www.facebook.com/justthriftphl" target="_blank" rel="noopener noreferrer"
+            style="color: var(--accent-pitch);">Facebook</a>
+          <a href="https://www.tiktok.com/@100201footballshop?fbclid=IwcGRvZgVleHRuA2FlbQIxMABicmlkETFkWTIwMFpjNE5Vb1M2U3NVc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHo6P7Sj_Fsqv2edyiNNJOntxYEZC_pZtuXR_xEzjiQzlqyMWQFB3tRhz5Zk4_aem_CoQufJ-BhEU5FGen0fhN0g"
+            target="_blank" rel="noopener noreferrer" style="color: var(--accent-pitch);">TikTok</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Phones & Tablets) -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+    <button class="mobile-nav-item active" id="mob-nav-shop" title="Shop All Kits">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+      </svg>
+      <span>Shop</span>
+    </button>
+    <button class="mobile-nav-item" id="mob-nav-track" title="Track Shipment" style="display: none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="1" y="3" width="15" height="13"></rect>
+        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+      </svg>
+      <span>Track</span>
+    </button>
+    <button class="mobile-nav-item" id="mob-nav-cart" title="View Bag" aria-label="Shopping Bag">
+      <div class="mob-cart-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span id="mob-cart-badge-count" class="badge-count" style="display: none;">0</span>
+      </div>
+      <span>Bag</span>
+    </button>
+  </nav>
+
+  <!-- Application Entry Point -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
