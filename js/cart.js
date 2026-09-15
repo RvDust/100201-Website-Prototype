@@ -1,10 +1,13 @@
-import { store } from './store.js';
+import { store, MAX_ORDER_AMOUNT_PHP, MAX_ORDER_ITEMS } from './store.js';
 import { auth, openCustomerAuthModal } from './auth.js';
 import { registerUserOrder } from './tracker.js';
+import { FootballCaptcha } from './captcha.js';
 
 let selectedPaymentMethodId = null;
 let currentCheckoutStep = 1;
 let fulfillmentMode = 'delivery'; // 'delivery' | 'pickup'
+let checkoutCaptcha = null;
+let isPlacingOrder = false;
 
 export function initCart() {
   setupCartEventListeners();
@@ -165,18 +168,22 @@ function setupMultiStepCheckout() {
       }
 
       currentCheckoutStep = 2;
-      if (step1Box) step1Box.style.display = 'none';
-      if (step2Box) step2Box.style.display = 'block';
-
-      if (stepNav1) {
-        stepNav1.classList.remove('active');
-        stepNav1.classList.add('completed');
-      }
-      if (stepNav2) {
-        stepNav2.classList.add('active');
-      }
+      step1Box.style.display = 'none';
+      step2Box.style.display = 'block';
+      stepNav1.classList.remove('active');
+      stepNav1.classList.add('completed');
+      stepNav2.classList.add('active');
 
       renderCheckoutPaymentMethods();
+
+      // Initialize or refresh Anti-Bot Security CAPTCHA for checkout step 2
+      if (!checkoutCaptcha) {
+        checkoutCaptcha = new FootballCaptcha('checkout-captcha-container');
+      } else {
+        checkoutCaptcha.refresh();
+      }
+
+      updatePlaceOrderBtnText();
     });
   }
 
@@ -339,6 +346,29 @@ export function renderCart() {
     shippingEl.textContent = summary.shipping === 0 ? 'FREE' : store.formatPrice(summary.shipping);
   }
   if (totalEl) totalEl.textContent = store.formatPrice(summary.finalTotal);
+
+  // Spending Cap & Quota Verification Banner in Cart
+  const limitWarning = document.getElementById('cart-limit-warning');
+  const checkoutBtn = document.getElementById('cart-checkout-btn');
+  const isOverSpendLimit = summary.finalTotal > MAX_ORDER_AMOUNT_PHP;
+  const isOverItemLimit = summary.totalItems > MAX_ORDER_ITEMS;
+
+  if (limitWarning && checkoutBtn) {
+    if (isOverSpendLimit || isOverItemLimit) {
+      limitWarning.style.display = 'block';
+      limitWarning.textContent = isOverSpendLimit
+        ? `⚠️ Order total exceeds the maximum spending cap of ${store.formatPrice(MAX_ORDER_AMOUNT_PHP)}.`
+        : `⚠️ Quantity exceeds the limit of ${MAX_ORDER_ITEMS} kits per order.`;
+      checkoutBtn.disabled = true;
+      checkoutBtn.style.opacity = '0.5';
+      checkoutBtn.style.cursor = 'not-allowed';
+    } else {
+      limitWarning.style.display = 'none';
+      checkoutBtn.disabled = false;
+      checkoutBtn.style.opacity = '1';
+      checkoutBtn.style.cursor = 'pointer';
+    }
+  }
 }
 
 export function openCheckoutModal() {
@@ -535,9 +565,33 @@ function updatePaymentCalloutText() {
 function handlePlaceOrder(e) {
   e.preventDefault();
 
+  if (isPlacingOrder) {
+    console.warn('[Cart] Order placement already in progress.');
+    return;
+  }
+
   const cart = store.getCart();
   if (cart.length === 0) {
     window.showToast?.('Bag is empty', 'error');
+    return;
+  }
+
+  const summary = store.getCartSummary();
+
+  // 1. Spending Cap Validation
+  if (summary.finalTotal > MAX_ORDER_AMOUNT_PHP) {
+    window.showToast?.(`Order total exceeds spending cap of ${store.formatPrice(MAX_ORDER_AMOUNT_PHP)}`, 'error');
+    return;
+  }
+
+  if (summary.totalItems > MAX_ORDER_ITEMS) {
+    window.showToast?.(`Order exceeds maximum allowed quantity of ${MAX_ORDER_ITEMS} kits`, 'error');
+    return;
+  }
+
+  // 2. Anti-Bot CAPTCHA Verification
+  if (checkoutCaptcha && !checkoutCaptcha.validate()) {
+    window.showToast?.('Please enter the 4-character security verification code.', 'warning');
     return;
   }
 
@@ -606,18 +660,43 @@ function handlePlaceOrder(e) {
     fulfillmentMode
   };
 
-  const summary = store.getCartSummary();
+  const placeOrderBtn = document.getElementById('checkout-place-order-btn');
+  const originalBtnContent = placeOrderBtn ? placeOrderBtn.innerHTML : 'Place Order';
 
-  const newOrder = store.createOrder({
-    customer,
-    items: cart,
-    summary,
-    paymentMethod: chosenPaymentMethod
-  });
+  // Lock UI to prevent duplicate payment / duplicate submissions
+  isPlacingOrder = true;
+  if (placeOrderBtn) {
+    placeOrderBtn.disabled = true;
+    placeOrderBtn.classList.add('is-loading');
+    placeOrderBtn.innerHTML = '<span class="button-spinner"></span> Processing Order...';
+  }
 
-  registerUserOrder(newOrder.id);
+  try {
+    const newOrder = store.createOrder({
+      customer,
+      items: cart,
+      summary,
+      paymentMethod: chosenPaymentMethod
+    });
 
-  showOrderConfirmationScreen(newOrder);
+    isPlacingOrder = false;
+    if (placeOrderBtn) {
+      placeOrderBtn.disabled = false;
+      placeOrderBtn.classList.remove('is-loading');
+      placeOrderBtn.innerHTML = originalBtnContent;
+    }
+
+    registerUserOrder(newOrder.id);
+    showOrderConfirmationScreen(newOrder);
+  } catch (err) {
+    isPlacingOrder = false;
+    if (placeOrderBtn) {
+      placeOrderBtn.disabled = false;
+      placeOrderBtn.classList.remove('is-loading');
+      placeOrderBtn.innerHTML = originalBtnContent;
+    }
+    window.showToast?.(err.message || 'Failed to place order. Please try again.', 'error');
+  }
 }
 
 function showOrderConfirmationScreen(order) {

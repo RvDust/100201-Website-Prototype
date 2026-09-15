@@ -456,6 +456,9 @@
         <div class="products-grid" id="products-grid">
           <!-- Populated by js/storefront.js -->
         </div>
+
+        <!-- Catalog Pagination Controls -->
+        <div id="catalog-pagination-container" class="pagination-bar" style="display: none;"></div>
       </div>
     </section>
   </main>
@@ -720,6 +723,8 @@
                 </tbody>
               </table>
             </div>
+            <!-- Admin Orders Pagination -->
+            <div id="admin-orders-pagination" class="pagination-bar" style="display: none;"></div>
           </div>
         </section>
       </div>
@@ -858,6 +863,10 @@
         <div class="cart-summary-line total-line">
           <span>Estimated Total:</span>
           <span id="cart-total-val">₱0</span>
+        </div>
+
+        <div id="cart-limit-warning" class="cart-limit-warning" style="display: none;">
+          ⚠️ Spending limit exceeded: Maximum ₱100,000 or 15 kits per order.
         </div>
 
         <button id="cart-checkout-btn" class="btn btn-primary btn-block" style="margin-top: 1rem;">
@@ -1046,6 +1055,9 @@
                   Save this as my default payment option
                 </label>
               </div>
+
+              <!-- Security Verification CAPTCHA Challenge -->
+              <div id="checkout-captcha-container" style="margin-top: 1.25rem;"></div>
 
               <button type="submit" id="checkout-place-order-btn" class="btn btn-primary btn-block"
                 style="margin-top: 1rem; font-size: 1rem; height: 46px;">
@@ -1501,6 +1513,18 @@
                 <img id="crud-img-preview" src="assets/products/barca-2627-home-1.jpg" alt="Preview"
                   onerror="this.src='assets/logo.jpg'">
               </div>
+            </div>
+            <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <label class="btn btn-secondary btn-sm" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload &amp; Compress Photo
+                <input type="file" id="crud-file-upload" accept="image/*" style="display: none;">
+              </label>
+              <span id="crud-upload-status" style="font-size: 0.75rem; color: var(--text-muted);">Strict 5MB cap &bull; Canvas optimized WebP/JPEG</span>
             </div>
 
             <!-- Dynamic Multi-Photo Gallery angles for this kit -->

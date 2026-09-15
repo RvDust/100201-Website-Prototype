@@ -1,5 +1,10 @@
 import { INITIAL_PRODUCTS, INITIAL_ORDERS, SHOP_INFO } from './mock-data.js';
 import { auth } from './auth.js';
+import { apiClient } from './apiClient.js';
+
+export const MAX_ORDER_AMOUNT_PHP = 100000;
+export const MAX_ORDER_ITEMS = 15;
+export const MIN_ORDER_AMOUNT_PHP = 100;
 
 class Store {
   constructor() {
@@ -17,7 +22,19 @@ class Store {
     this.discountPercent = 0;
     this.currency = 'PHP';
 
+    // In-memory Fast O(1) Index Maps
+    this.productsMap = new Map();
+    this.ordersMap = new Map();
+
     this.init();
+  }
+
+  rebuildIndexMaps() {
+    this.productsMap.clear();
+    this.products.forEach(p => this.productsMap.set(p.id, p));
+
+    this.ordersMap.clear();
+    this.orders.forEach(o => this.ordersMap.set(o.id.toUpperCase(), o));
   }
 
   init() {
@@ -58,38 +75,32 @@ class Store {
     const savedCart = localStorage.getItem('100201_cart');
     this.cart = savedCart ? JSON.parse(savedCart) : [];
 
+    this.rebuildIndexMaps();
+
     // Attempt dynamic backend sync if server API is available
     this.syncWithBackend();
   }
 
   async syncWithBackend() {
     try {
-      const res = await fetch('/api/products');
-      if (res.ok) {
-        const serverProds = await res.json();
-        if (Array.isArray(serverProds)) {
-          this.products = serverProds;
-          localStorage.setItem('100201_products', JSON.stringify(this.products));
-          this.notify('products', this.products);
-        }
+      const resProds = await apiClient.get('/api/products');
+      if (resProds.ok && Array.isArray(resProds.data)) {
+        this.products = resProds.data;
+        this.rebuildIndexMaps();
+        localStorage.setItem('100201_products', JSON.stringify(this.products));
+        this.notify('products', this.products);
       }
-    } catch (e) {
-      // Backend not running; offline localStorage fallback
-    }
+    } catch (_) {}
 
     try {
-      const resOrders = await fetch('/api/orders');
-      if (resOrders.ok) {
-        const serverOrders = await resOrders.json();
-        if (Array.isArray(serverOrders)) {
-          this.orders = serverOrders;
-          localStorage.setItem('100201_orders', JSON.stringify(this.orders));
-          this.notify('orders', this.orders);
-        }
+      const resOrders = await apiClient.get('/api/orders');
+      if (resOrders.ok && Array.isArray(resOrders.data)) {
+        this.orders = resOrders.data;
+        this.rebuildIndexMaps();
+        localStorage.setItem('100201_orders', JSON.stringify(this.orders));
+        this.notify('orders', this.orders);
       }
-    } catch (e) {
-      // Offline fallback
-    }
+    } catch (_) {}
   }
 
   // --- PUB / SUB ---
@@ -130,8 +141,10 @@ class Store {
     return [...this.products];
   }
 
+  // Fast O(1) Product Lookup
   getProductById(id) {
-    return this.products.find(p => p.id === id);
+    if (!id) return null;
+    return this.productsMap.get(id) || this.products.find(p => p.id === id) || null;
   }
 
   addProduct(productData) {
@@ -342,13 +355,40 @@ class Store {
     return [...this.orders];
   }
 
+  // Fast O(1) Order Lookup
   getOrderById(id) {
     if (!id) return null;
     const cleanId = id.trim().toUpperCase();
-    return this.orders.find(o => o.id.toUpperCase() === cleanId);
+    return this.ordersMap.get(cleanId) || this.orders.find(o => o.id.toUpperCase() === cleanId) || null;
   }
 
   createOrder(orderPayload) {
+    // 1. Cost Controls & Spending Cap Enforcement
+    const totalAmount = orderPayload.summary?.finalTotal || 0;
+    if (totalAmount > MAX_ORDER_AMOUNT_PHP) {
+      throw new Error(`Order total (₱${totalAmount.toLocaleString()}) exceeds the maximum spending cap of ₱${MAX_ORDER_AMOUNT_PHP.toLocaleString()}. Please contact store manager.`);
+    }
+
+    const totalKits = (orderPayload.items || []).reduce((acc, it) => acc + (it.quantity || 1), 0);
+    if (totalKits > MAX_ORDER_ITEMS) {
+      throw new Error(`Order quantity (${totalKits} kits) exceeds the quota of ${MAX_ORDER_ITEMS} kits per order.`);
+    }
+
+    // 2. Duplicate Payment & Order Prevention (60-second window replay check)
+    const customerEmail = (orderPayload.customer?.email || '').trim().toLowerCase();
+    const recentDuplicate = this.orders.find(o => {
+      const isSameEmail = (o.customer?.email || '').trim().toLowerCase() === customerEmail;
+      const isSameTotal = Math.abs((o.total || 0) - totalAmount) < 1;
+      const orderAgeMs = Date.now() - new Date(o.date).getTime();
+      return isSameEmail && isSameTotal && orderAgeMs < 60000;
+    });
+
+    if (recentDuplicate) {
+      console.warn('[Store] Duplicate order attempt detected. Returning existing order:', recentDuplicate.id);
+      this.clearCart();
+      return recentDuplicate;
+    }
+
     const orderId = `100201-ORD-${Math.floor(1000 + Math.random() * 9000)}`;
     const now = new Date();
     const formattedNow = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -428,6 +468,7 @@ class Store {
     this.notify('products', this.products);
 
     this.orders.unshift(newOrder);
+    this.rebuildIndexMaps();
     this.saveOrders();
     this.notify('orders', this.orders);
 
@@ -486,14 +527,93 @@ class Store {
   }
 
   saveOrders() {
+    this.rebuildIndexMaps();
     localStorage.setItem('100201_orders', JSON.stringify(this.orders));
-    try {
-      fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.orders)
-      }).catch(() => {});
-    } catch (e) {}
+    apiClient.post('/api/orders', this.orders).catch(() => {});
+  }
+
+  saveProducts() {
+    this.rebuildIndexMaps();
+    localStorage.setItem('100201_products', JSON.stringify(this.products));
+    apiClient.post('/api/products', this.products).catch(() => {});
+  }
+
+  // --- PAGINATION HELPERS ---
+  getPaginatedProducts({ page = 1, pageSize = 12, category = 'all', searchQuery = '', sortBy = 'featured' } = {}) {
+    let list = [...this.products];
+
+    // Category filter
+    if (category && category !== 'all') {
+      list = list.filter(p => p.league === category || p.type === category);
+    }
+
+    // Search filter
+    if (searchQuery && searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      list = list.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.club.toLowerCase().includes(q) ||
+        p.league.toLowerCase().includes(q) ||
+        (p.season && p.season.toLowerCase().includes(q))
+      );
+    }
+
+    // Sorting
+    if (sortBy === 'price-low') {
+      list.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-high') {
+      list.sort((a, b) => b.price - a.price);
+    } else if (sortBy === 'name') {
+      list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    const total = list.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const currentPage = Math.min(Math.max(1, page), totalPages);
+    const startIdx = (currentPage - 1) * pageSize;
+    const paginatedItems = list.slice(startIdx, startIdx + pageSize);
+
+    return {
+      items: paginatedItems,
+      total,
+      page: currentPage,
+      totalPages,
+      hasPrev: currentPage > 1,
+      hasNext: currentPage < totalPages
+    };
+  }
+
+  getPaginatedOrders({ page = 1, pageSize = 10, status = 'all', searchQuery = '' } = {}) {
+    let list = [...this.orders];
+
+    if (status && status !== 'all') {
+      list = list.filter(o => o.status === status);
+    }
+
+    if (searchQuery && searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      list = list.filter(o =>
+        o.id.toLowerCase().includes(q) ||
+        (o.customer?.name && o.customer.name.toLowerCase().includes(q)) ||
+        (o.customer?.email && o.customer.email.toLowerCase().includes(q)) ||
+        (o.trackingNumber && o.trackingNumber.toLowerCase().includes(q))
+      );
+    }
+
+    const total = list.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const currentPage = Math.min(Math.max(1, page), totalPages);
+    const startIdx = (currentPage - 1) * pageSize;
+    const paginatedItems = list.slice(startIdx, startIdx + pageSize);
+
+    return {
+      items: paginatedItems,
+      total,
+      page: currentPage,
+      totalPages,
+      hasPrev: currentPage > 1,
+      hasNext: currentPage < totalPages
+    };
   }
 
   resetAllData() {

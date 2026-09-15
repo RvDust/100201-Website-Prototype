@@ -7,6 +7,9 @@ let activeType = 'all';
 let searchQuery = '';
 let currentSort = 'featured';
 
+export const CATALOG_PAGE_SIZE = 12;
+let catalogCurrentPage = 1;
+
 let selectedProductForModal = null;
 let selectedSizeForModal = null;
 let modalQuantity = 1;
@@ -30,6 +33,7 @@ export function setCatalogLeagueFilter(league) {
   activeLeague = league;
   activeType = 'all';
   searchQuery = '';
+  catalogCurrentPage = 1;
 
   const searchInput = document.getElementById('catalog-search-input');
   if (searchInput) searchInput.value = '';
@@ -56,6 +60,7 @@ function setupFilterEventListeners() {
       leagueTabs.forEach(t => t.classList.remove('active'));
       e.currentTarget.classList.add('active');
       activeLeague = e.currentTarget.dataset.league;
+      catalogCurrentPage = 1;
       renderCatalog();
     });
   });
@@ -67,6 +72,7 @@ function setupFilterEventListeners() {
       typeChips.forEach(c => c.classList.remove('active'));
       e.currentTarget.classList.add('active');
       activeType = e.currentTarget.dataset.type;
+      catalogCurrentPage = 1;
       renderCatalog();
     });
   });
@@ -78,6 +84,7 @@ function setupFilterEventListeners() {
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value.toLowerCase().trim();
+      catalogCurrentPage = 1;
       if (searchClear) {
         searchClear.style.display = searchQuery ? 'block' : 'none';
       }
@@ -89,6 +96,7 @@ function setupFilterEventListeners() {
     searchClear.addEventListener('click', () => {
       searchInput.value = '';
       searchQuery = '';
+      catalogCurrentPage = 1;
       searchClear.style.display = 'none';
       renderCatalog();
     });
@@ -107,6 +115,7 @@ function setupFilterEventListeners() {
   if (sortSelect) {
     sortSelect.addEventListener('change', (e) => {
       currentSort = e.target.value;
+      catalogCurrentPage = 1;
       renderCatalog();
     });
   }
@@ -303,20 +312,23 @@ export function renderCatalog() {
     resetWrap.style.display = isFiltered ? 'block' : 'none';
   }
 
+  const paginationContainer = document.getElementById('catalog-pagination-container');
+
   if (products.length === 0) {
+    if (paginationContainer) paginationContainer.style.display = 'none';
     const isFiltered = activeLeague !== 'all' || activeType !== 'all' || searchQuery !== '';
     container.innerHTML = `
-      <div class="empty-catalog">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M16 16s-1.5-2-4-2-4 2-4 2"></path>
-          <line x1="9" y1="9" x2="9.01" y2="9"></line>
-          <line x1="15" y1="9" x2="15.01" y2="9"></line>
-        </svg>
-        <h3>${isFiltered ? 'No matching football jerseys found' : 'New Season Kits Dropping Soon'}</h3>
-        <p>${isFiltered ? 'Try searching for another national team, club, or reset filters.' : 'Our collection is currently being updated with fresh on-hand kits & retro archives.'}</p>
+      <div class="empty-state-card">
+        <div class="empty-state-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <div class="empty-state-title">${isFiltered ? 'No matching jerseys found' : 'New Season Kits Dropping Soon'}</div>
+        <div class="empty-state-text">${isFiltered ? 'We couldn\'t find any kits matching your current filters or search terms. Try clearing your search or browsing another league.' : 'Our collection is currently being updated with fresh on-hand kits & retro archives.'}</div>
         ${isFiltered
-        ? `<button id="reset-filter-btn-empty" class="btn btn-primary btn-sm" style="margin-top: 1.25rem;">Reset All Filters</button>`
+        ? `<button id="reset-filter-btn-empty" class="btn btn-primary btn-sm">&times; Clear All Filters</button>`
         : ''
       }
       </div>
@@ -330,7 +342,14 @@ export function renderCatalog() {
     return;
   }
 
-  container.innerHTML = products.map(kit => {
+  // Pagination slicing (12 kits per page)
+  const totalPages = Math.ceil(products.length / CATALOG_PAGE_SIZE);
+  catalogCurrentPage = Math.max(1, Math.min(catalogCurrentPage, totalPages));
+
+  const startIndex = (catalogCurrentPage - 1) * CATALOG_PAGE_SIZE;
+  const paginatedProducts = products.slice(startIndex, startIndex + CATALOG_PAGE_SIZE);
+
+  container.innerHTML = paginatedProducts.map(kit => {
     const totalStock = Object.values(kit.stock || {}).reduce((a, b) => a + b, 0);
     const isSoldOut = totalStock === 0;
     const isPreOrder = kit.availability && kit.availability.toLowerCase().includes('pre-order');
@@ -339,7 +358,7 @@ export function renderCatalog() {
     return `
       <div class="product-card" data-product-id="${kit.id}">
         <div class="card-img-container">
-          <img class="card-img" src="${kit.image}" alt="${kit.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?auto=format&fit=crop&w=800&q=80'">
+          <img class="card-img" src="${kit.image}" alt="${kit.name}" loading="lazy" onerror="this.src='assets/products/brasil-06-1.jpg'">
           <div class="card-badges">
             ${kit.badge ? `<span class="badge ${kit.type === 'Retro' ? 'badge-retro' : 'badge-authentic'}">${kit.badge}</span>` : ''}
             <span class="badge ${isPreOrder ? 'badge-retro' : 'badge-new'}">
@@ -391,6 +410,106 @@ export function renderCatalog() {
       const product = store.getProductById(prodId);
       if (product) openQuickView(product);
     });
+  });
+
+  // Render Catalog Pagination Controls
+  if (paginationContainer) {
+    if (totalPages > 1) {
+      paginationContainer.style.display = 'flex';
+      let html = `
+        <button class="page-btn" id="catalog-prev-page" ${catalogCurrentPage === 1 ? 'disabled' : ''} title="Previous Page">&larr; Prev</button>
+      `;
+
+      for (let p = 1; p <= totalPages; p++) {
+        html += `<button class="page-btn ${p === catalogCurrentPage ? 'active' : ''}" data-page="${p}">${p}</button>`;
+      }
+
+      html += `
+        <button class="page-btn" id="catalog-next-page" ${catalogCurrentPage === totalPages ? 'disabled' : ''} title="Next Page">Next &rarr;</button>
+      `;
+
+      paginationContainer.innerHTML = html;
+
+      paginationContainer.querySelectorAll('[data-page]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          catalogCurrentPage = parseInt(e.target.dataset.page, 10);
+          renderCatalog();
+          document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      document.getElementById('catalog-prev-page')?.addEventListener('click', () => {
+        if (catalogCurrentPage > 1) {
+          catalogCurrentPage--;
+          renderCatalog();
+          document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+      document.getElementById('catalog-next-page')?.addEventListener('click', () => {
+        if (catalogCurrentPage < totalPages) {
+          catalogCurrentPage++;
+          renderCatalog();
+          document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    } else {
+      paginationContainer.style.display = 'none';
+      paginationContainer.innerHTML = '';
+    }
+  }
+}
+
+// Shimmer Skeleton Loader Renderer
+export function renderCatalogSkeletons(count = 8) {
+  const container = document.getElementById('products-grid');
+  if (!container) return;
+  container.innerHTML = Array.from({ length: count }).map(() => `
+    <div class="skeleton-card">
+      <div class="skeleton-media skeleton-shimmer"></div>
+      <div class="skeleton-content">
+        <div class="skeleton-line skeleton-line-title skeleton-shimmer"></div>
+        <div class="skeleton-line skeleton-line-subtitle skeleton-shimmer"></div>
+        <div class="skeleton-line skeleton-line-price skeleton-shimmer"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Client-side Canvas Image Compressor
+export async function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith('image/')) {
+      return reject(new Error('Invalid image file. Please choose a JPEG, PNG, or WebP photo.'));
+    }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read photo file'));
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Failed to parse photo format'));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxWidth || height > maxHeight) {
+          if (width / height > maxWidth / maxHeight) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+        const dataUrl = canvas.toDataURL(mime, quality);
+        resolve(dataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
   });
 }
 

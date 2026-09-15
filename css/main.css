@@ -1177,3 +1177,265 @@ input:focus, select:focus, textarea:focus {
     white-space: nowrap;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* UI Resilience: Skeletons, Spinners, Empty States, Pagination & CAPTCHA     */
+/* -------------------------------------------------------------------------- */
+
+/* 1. Shimmer Skeleton Loading */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #141418 25%, #22222a 50%, #141418 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite ease-in-out;
+}
+
+.skeleton-card {
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-media {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.skeleton-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeleton-line-title { width: 75%; height: 18px; }
+.skeleton-line-subtitle { width: 45%; }
+.skeleton-line-price { width: 35%; height: 20px; margin-top: 0.4rem; }
+
+/* 2. Button Spinner & Busy States */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.button-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #FFFFFF;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.btn.is-loading {
+  pointer-events: none;
+  opacity: 0.8;
+  cursor: wait !important;
+}
+
+/* 3. Empty States */
+.empty-state-card {
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-lg);
+  max-width: 520px;
+  margin: 2rem auto;
+}
+
+.empty-state-icon {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 1.25rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 50%;
+}
+
+.empty-state-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+/* 4. Anti-Bot CAPTCHA Challenge */
+.football-captcha-card {
+  background: #111115;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.captcha-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.captcha-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-volt, #DFFF00);
+}
+
+.captcha-refresh-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.captcha-refresh-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.captcha-challenge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.captcha-canvas {
+  background: #08080A;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  display: block;
+}
+
+.captcha-input {
+  flex: 1;
+  background: #08080A;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.captcha-input:focus {
+  border-color: var(--accent-pitch, #10B981);
+}
+
+.captcha-input.valid {
+  border-color: #10B981;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.captcha-input.invalid {
+  border-color: #EF4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.captcha-status-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+}
+
+.captcha-status-hint.success {
+  color: #10B981;
+  font-weight: 600;
+}
+
+.captcha-status-hint.error {
+  color: #EF4444;
+}
+
+/* 5. Pagination Bar */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 2.5rem 0 1rem;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 38px;
+  text-align: center;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #252530;
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.page-btn.active {
+  background: #FFFFFF;
+  color: #08080A;
+  border-color: #FFFFFF;
+  font-weight: 700;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-ellipsis {
+  color: var(--text-muted);
+  padding: 0 0.25rem;
+  user-select: none;
+}
+

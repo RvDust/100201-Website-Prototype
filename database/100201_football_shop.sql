@@ -81,8 +81,10 @@ CREATE TABLE `products` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `idx_product_league` (`league`),
+  KEY `idx_product_club` (`club`),
   KEY `idx_product_featured` (`is_featured`),
-  KEY `idx_product_version` (`version_type`)
+  KEY `idx_product_version` (`version_type`),
+  KEY `idx_product_created` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------------------------
@@ -239,7 +241,9 @@ CREATE TABLE `orders` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
+  KEY `idx_order_customer_email` (`customer_email`),
   KEY `idx_order_status` (`order_status`),
+  KEY `idx_order_date` (`order_date`),
   KEY `idx_tracking_num` (`tracking_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

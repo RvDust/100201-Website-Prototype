@@ -2,6 +2,7 @@
 
 import { store } from './store.js';
 import { auth } from './auth.js';
+import { compressImage } from './storefront.js';
 
 let editingProductId = null;
 let currentAdminTab = 'products';
@@ -9,6 +10,9 @@ let productSearchQuery = '';
 let orderStatusFilter = 'all';
 let currentModalImages = [];
 let localPresetAssets = [];
+
+const ORDERS_PAGE_SIZE = 10;
+let ordersCurrentPage = 1;
 
 export function initAdmin() {
   setupAdminEventListeners();
@@ -103,6 +107,47 @@ function setupAdminEventListeners() {
   if (imgUrlInput && imgPreview) {
     imgUrlInput.addEventListener('input', (e) => {
       imgPreview.src = e.target.value || 'assets/logo.jpg';
+    });
+  }
+
+  // Client-side Image Compression for Admin Uploads (5MB limit & Canvas optimization)
+  const fileUploadInput = document.getElementById('crud-file-upload');
+  const uploadStatus = document.getElementById('crud-upload-status');
+  if (fileUploadInput) {
+    fileUploadInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // 5MB limit check (Deliverable #20)
+      if (file.size > 5 * 1024 * 1024) {
+        window.showToast?.('File exceeds 5MB limit. Please choose a smaller photo.', 'error');
+        if (uploadStatus) uploadStatus.textContent = '❌ File exceeded 5MB limit';
+        return;
+      }
+
+      if (uploadStatus) uploadStatus.textContent = '⏳ Compressing photo...';
+
+      try {
+        // Canvas compression (Deliverable #19)
+        const compressedDataUrl = await compressImage(file, 1200, 1200, 0.82);
+        if (imgUrlInput) imgUrlInput.value = compressedDataUrl;
+        if (imgPreview) imgPreview.src = compressedDataUrl;
+
+        if (!currentModalImages.includes(compressedDataUrl)) {
+          currentModalImages.unshift(compressedDataUrl);
+          renderGalleryChips();
+        }
+
+        if (uploadStatus) {
+          const originalKb = Math.round(file.size / 1024);
+          uploadStatus.textContent = `✓ Compressed & Attached (${originalKb}KB original)`;
+        }
+        window.showToast?.('Photo compressed and attached successfully!', 'success');
+      } catch (err) {
+        console.error('Image compression failed:', err);
+        if (uploadStatus) uploadStatus.textContent = '❌ Compression failed';
+        window.showToast?.('Failed to compress image file.', 'error');
+      }
     });
   }
 
@@ -283,6 +328,7 @@ function renderProductsTable() {
 
 function renderOrdersTable() {
   const tbody = document.getElementById('admin-orders-table-body');
+  const paginationContainer = document.getElementById('admin-orders-pagination');
   if (!tbody) return;
 
   let orders = store.getOrders();
@@ -292,6 +338,7 @@ function renderOrdersTable() {
   }
 
   if (orders.length === 0) {
+    if (paginationContainer) paginationContainer.style.display = 'none';
     tbody.innerHTML = `
       <tr>
         <td colspan="6" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
@@ -302,7 +349,13 @@ function renderOrdersTable() {
     return;
   }
 
-  tbody.innerHTML = orders.map(order => {
+  const totalPages = Math.ceil(orders.length / ORDERS_PAGE_SIZE);
+  ordersCurrentPage = Math.max(1, Math.min(ordersCurrentPage, totalPages));
+
+  const startIndex = (ordersCurrentPage - 1) * ORDERS_PAGE_SIZE;
+  const paginatedOrders = orders.slice(startIndex, startIndex + ORDERS_PAGE_SIZE);
+
+  tbody.innerHTML = paginatedOrders.map(order => {
     const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
     const dateStr = new Date(order.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -359,6 +412,43 @@ function renderOrdersTable() {
       window.navigateToView?.('tracker', orderId);
     });
   });
+
+  // Render Admin Orders Pagination
+  if (paginationContainer) {
+    if (totalPages > 1) {
+      paginationContainer.style.display = 'flex';
+      let html = `<button class="page-btn" id="admin-orders-prev" ${ordersCurrentPage === 1 ? 'disabled' : ''}>&larr; Prev</button>`;
+      for (let p = 1; p <= totalPages; p++) {
+        html += `<button class="page-btn ${p === ordersCurrentPage ? 'active' : ''}" data-order-page="${p}">${p}</button>`;
+      }
+      html += `<button class="page-btn" id="admin-orders-next" ${ordersCurrentPage === totalPages ? 'disabled' : ''}>Next &rarr;</button>`;
+      paginationContainer.innerHTML = html;
+
+      paginationContainer.querySelectorAll('[data-order-page]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          ordersCurrentPage = parseInt(e.target.dataset.orderPage, 10);
+          renderOrdersTable();
+        });
+      });
+
+      document.getElementById('admin-orders-prev')?.addEventListener('click', () => {
+        if (ordersCurrentPage > 1) {
+          ordersCurrentPage--;
+          renderOrdersTable();
+        }
+      });
+
+      document.getElementById('admin-orders-next')?.addEventListener('click', () => {
+        if (ordersCurrentPage < totalPages) {
+          ordersCurrentPage++;
+          renderOrdersTable();
+        }
+      });
+    } else {
+      paginationContainer.style.display = 'none';
+      paginationContainer.innerHTML = '';
+    }
+  }
 }
 
 // --- DYNAMIC CRUD MODAL LOGIC & PRESET ASSET DISCOVERY ---

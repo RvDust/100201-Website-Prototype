@@ -1,5 +1,74 @@
 [
   {
+    "id": "100201-ORD-4032",
+    "date": "2026-09-15T16:32:29.776Z",
+    "customer": {
+      "name": "PRINCESS LOUELLA AGUI",
+      "email": "agui.princess@gmail.com",
+      "phone": "+639617668255",
+      "address": "Unit 14B, Sapphire Tower, Ortigas Center",
+      "city": "Makati City",
+      "postalCode": "1213",
+      "country": "Philippines"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-home",
+        "name": "Barcelona '26/'27 Home Kit",
+        "size": "S",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-home-1.jpg",
+        "customization": null
+      }
+    ],
+    "subtotal": 1100,
+    "discount": 0,
+    "shipping": 120,
+    "total": 1220,
+    "paymentMethod": {
+      "type": "gcash",
+      "brand": "GCash",
+      "last4": "8255"
+    },
+    "status": "Order Confirmed",
+    "carrier": "J&T Express / Store Dispatch",
+    "trackingNumber": "JT-100201-527119",
+    "estimatedDelivery": "2-4 Business Days (Nationwide PH)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-16 00:32",
+        "description": "Payment acknowledged by 100201 Football Shop. Jersey reservation secured.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic heat-press printing applied at store workshop.",
+        "completed": false
+      },
+      {
+        "status": "Shipped",
+        "timestamp": null,
+        "description": "Dispatched via courier partner (J&T / LBC Express).",
+        "completed": false
+      },
+      {
+        "status": "Out for Delivery",
+        "timestamp": null,
+        "description": "Courier rider is on delivery route.",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "timestamp": null,
+        "description": "Delivered to recipient address or collected in-store.",
+        "completed": false
+      }
+    ]
+  },
+  {
     "id": "100201-ORD-8141",
     "date": "2026-09-10T08:00:51.106Z",
     "customer": {
