@@ -168,11 +168,11 @@ function buildOrderConfirmEmail(order) {
   const isPop = pm.type === 'pickup';
 
   const itemsRows = (order.items || []).map(item =>
-    '<tr><td style="padding:8px 12px;border-bottom:1px solid #1e2a1e">' + item.name +
-    (item.customization ? ' <em style="color:#4ade80">(' + item.customization + ')</em>' : '') +
-    '</td><td style="padding:8px 12px;border-bottom:1px solid #1e2a1e;text-align:center">' + item.size +
-    '</td><td style="padding:8px 12px;border-bottom:1px solid #1e2a1e;text-align:center">' + item.quantity +
-    '</td><td style="padding:8px 12px;border-bottom:1px solid #1e2a1e;text-align:right">&#8369;' + (item.price * item.quantity).toLocaleString() + '</td></tr>'
+    '<tr><td style="padding:8px 12px;border-bottom:1px solid #2e1319">' + item.name +
+    (item.customization ? ' <em style="color:#F43F5E">(' + item.customization + ')</em>' : '') +
+    '</td><td style="padding:8px 12px;border-bottom:1px solid #2e1319;text-align:center">' + item.size +
+    '</td><td style="padding:8px 12px;border-bottom:1px solid #2e1319;text-align:center">' + item.quantity +
+    '</td><td style="padding:8px 12px;border-bottom:1px solid #2e1319;text-align:right">&#8369;' + (item.price * item.quantity).toLocaleString() + '</td></tr>'
   ).join('');
 
   const payNote = isCod
@@ -182,7 +182,7 @@ function buildOrderConfirmEmail(order) {
     : (pm.brand || 'Digital Payment') + ' — Thank you for your payment of &#8369;' + (order.total || 0).toLocaleString() + '.';
 
   const fulfNote = isPickup
-    ? 'Store Pick-up — 100201 Football Shop Counter, Ortigas Center, Pasig City. Claim Code: <strong style="color:#4ade80">' + order.trackingNumber + '</strong>'
+    ? 'Store Pick-up — 100201 Football Shop Counter, Ortigas Center, Pasig City. Claim Code: <strong style="color:#F43F5E">' + order.trackingNumber + '</strong>'
     : 'Nationwide Delivery — ' + order.carrier + ' | Waybill: ' + order.trackingNumber + ' | ETA: ' + order.estimatedDelivery;
 
   return {
@@ -190,33 +190,33 @@ function buildOrderConfirmEmail(order) {
     html: '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#0d1117;font-family:Arial,sans-serif;color:#e2e8f0">' +
       '<div style="max-width:600px;margin:0 auto;padding:32px 16px">' +
       '<div style="text-align:center;margin-bottom:24px"><div style="font-size:2rem;font-weight:900;color:#fff">100201</div>' +
-      '<div style="font-size:0.75rem;color:#4ade80;letter-spacing:3px">FOOTBALL SHOP</div></div>' +
-      '<div style="background:#111a11;border:1px solid #1e2a1e;border-radius:12px;padding:28px;margin-bottom:16px">' +
+      '<div style="font-size:0.75rem;color:#F43F5E;letter-spacing:3px">FOOTBALL SHOP</div></div>' +
+      '<div style="background:#160e10;border:1px solid #2e1319;border-radius:12px;padding:28px;margin-bottom:16px">' +
       '<h1 style="text-align:center;color:#fff;font-size:1.3rem">' + (isPickup ? 'Pick-up Order Confirmed!' : 'Order Confirmed!') + '</h1>' +
       '<p style="text-align:center;color:#6b7280">Thank you, <strong style="color:#fff">' + (order.customer && order.customer.name) + '</strong>!</p>' +
       '<div style="background:#0d1117;border-radius:8px;padding:16px;text-align:center;margin:16px 0">' +
       '<div style="font-size:0.7rem;color:#6b7280;letter-spacing:2px;text-transform:uppercase">Order Reference</div>' +
-      '<div style="font-size:1.3rem;font-weight:700;color:#4ade80;letter-spacing:2px">' + order.id + '</div></div>' +
-      '<table style="width:100%;border-collapse:collapse"><thead><tr style="background:#1e2a1e">' +
+      '<div style="font-size:1.3rem;font-weight:700;color:#F43F5E;letter-spacing:2px">' + order.id + '</div></div>' +
+      '<table style="width:100%;border-collapse:collapse"><thead><tr style="background:#2e1319">' +
       '<th style="padding:8px 12px;text-align:left;font-size:0.7rem;color:#6b7280;text-transform:uppercase">Item</th>' +
       '<th style="padding:8px 12px;text-align:center;font-size:0.7rem;color:#6b7280;text-transform:uppercase">Size</th>' +
       '<th style="padding:8px 12px;text-align:center;font-size:0.7rem;color:#6b7280;text-transform:uppercase">Qty</th>' +
       '<th style="padding:8px 12px;text-align:right;font-size:0.7rem;color:#6b7280;text-transform:uppercase">Price</th>' +
       '</tr></thead><tbody>' + itemsRows + '</tbody></table>' +
-      '<div style="border-top:2px solid #1e2a1e;padding-top:12px;margin-top:12px">' +
+      '<div style="border-top:2px solid #2e1319;padding-top:12px;margin-top:12px">' +
       '<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#6b7280">Subtotal</span><span>&#8369;' + (order.subtotal || 0).toLocaleString() + '</span></div>' +
-      (order.discount > 0 ? '<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#6b7280">Discount</span><span style="color:#4ade80">-&#8369;' + order.discount.toLocaleString() + '</span></div>' : '') +
-      '<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#6b7280">' + (isPickup ? 'Pick-up Fee' : 'Shipping') + '</span><span style="color:#4ade80">' + (order.shipping === 0 ? 'FREE' : '&#8369;' + order.shipping.toLocaleString()) + '</span></div>' +
-      '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:1.05rem;padding-top:8px;border-top:1px solid #1e2a1e">' +
-      '<span>Total</span><span style="color:#4ade80">&#8369;' + (order.total || 0).toLocaleString() + '</span></div></div></div>' +
-      '<div style="background:#111a11;border:1px solid #1e2a1e;border-radius:12px;padding:20px;margin-bottom:16px">' +
+      (order.discount > 0 ? '<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#6b7280">Discount</span><span style="color:#F43F5E">-&#8369;' + order.discount.toLocaleString() + '</span></div>' : '') +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#6b7280">' + (isPickup ? 'Pick-up Fee' : 'Shipping') + '</span><span style="color:#F43F5E">' + (order.shipping === 0 ? 'FREE' : '&#8369;' + order.shipping.toLocaleString()) + '</span></div>' +
+      '<div style="display:flex;justify-content:space-between;font-weight:700;font-size:1.05rem;padding-top:8px;border-top:1px solid #2e1319">' +
+      '<span>Total</span><span style="color:#F43F5E">&#8369;' + (order.total || 0).toLocaleString() + '</span></div></div></div>' +
+      '<div style="background:#160e10;border:1px solid #2e1319;border-radius:12px;padding:20px;margin-bottom:16px">' +
       '<h3 style="margin:0 0 12px;font-size:0.85rem;color:#6b7280;text-transform:uppercase">Fulfillment</h3>' +
       '<p style="margin:0;font-size:0.9rem;line-height:1.6">' + fulfNote + '</p></div>' +
-      '<div style="background:#111a11;border:1px solid #1e2a1e;border-radius:12px;padding:20px;margin-bottom:24px">' +
+      '<div style="background:#160e10;border:1px solid #2e1319;border-radius:12px;padding:20px;margin-bottom:24px">' +
       '<h3 style="margin:0 0 12px;font-size:0.85rem;color:#6b7280;text-transform:uppercase">Payment</h3>' +
       '<p style="margin:0;font-size:0.9rem;line-height:1.6">' + payNote + '</p></div>' +
-      '<div style="text-align:center;padding:16px 0;border-top:1px solid #1e2a1e">' +
-      '<p style="color:#6b7280;font-size:0.8rem;margin:0">Questions? Contact us: <strong style="color:#4ade80">@100201footballshop_</strong> on Instagram</p>' +
+      '<div style="text-align:center;padding:16px 0;border-top:1px solid #2e1319">' +
+      '<p style="color:#6b7280;font-size:0.8rem;margin:0">Questions? Contact us: <strong style="color:#F43F5E">@100201footballshop_</strong> on Instagram</p>' +
       '<p style="color:#374151;font-size:0.72rem;margin:8px 0 0">2026 100201 Football Shop - Pasig City, Philippines</p></div></div></body></html>',
     text: 'Order Confirmed! ' + order.id + '\n\nThank you, ' + (order.customer && order.customer.name) + '!\n\n' +
       'Items:\n' + (order.items || []).map(i => '- ' + i.name + ' (' + i.size + ') x' + i.quantity + ' = P' + (i.price * i.quantity).toLocaleString()).join('\n') +
@@ -255,24 +255,24 @@ function buildStatusUpdateEmail(order, newStatus) {
     html: '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#0d1117;font-family:Arial,sans-serif;color:#e2e8f0">' +
       '<div style="max-width:600px;margin:0 auto;padding:32px 16px">' +
       '<div style="text-align:center;margin-bottom:24px"><div style="font-size:2rem;font-weight:900;color:#fff">100201</div>' +
-      '<div style="font-size:0.75rem;color:#4ade80;letter-spacing:3px">FOOTBALL SHOP</div></div>' +
-      '<div style="background:#111a11;border:1px solid #1e2a1e;border-radius:12px;padding:28px;text-align:center;margin-bottom:16px">' +
+      '<div style="font-size:0.75rem;color:#F43F5E;letter-spacing:3px">FOOTBALL SHOP</div></div>' +
+      '<div style="background:#160e10;border:1px solid #2e1319;border-radius:12px;padding:28px;text-align:center;margin-bottom:16px">' +
       '<div style="font-size:3rem;margin-bottom:12px">' + icon + '</div>' +
       '<h1 style="margin:0 0 8px;font-size:1.2rem;color:#fff">' + msg + '</h1>' +
-      '<p style="color:#6b7280;margin:0 0 16px">Order <strong style="color:#4ade80">' + order.id + '</strong></p>' +
+      '<p style="color:#6b7280;margin:0 0 16px">Order <strong style="color:#F43F5E">' + order.id + '</strong></p>' +
       '<p style="color:#e2e8f0;font-size:0.9rem;line-height:1.6;margin:0">' + note + '</p></div>' +
-      '<div style="background:#111a11;border:1px solid #1e2a1e;border-radius:12px;padding:20px;margin-bottom:20px">' +
+      '<div style="background:#160e10;border:1px solid #2e1319;border-radius:12px;padding:20px;margin-bottom:20px">' +
       '<div style="display:flex;justify-content:space-between;margin-bottom:8px">' +
       '<span style="color:#6b7280;font-size:0.85rem">Customer</span>' +
       '<span style="font-size:0.85rem">' + (order.customer && order.customer.name) + '</span></div>' +
       '<div style="display:flex;justify-content:space-between;margin-bottom:8px">' +
       '<span style="color:#6b7280;font-size:0.85rem">' + (isPickup ? 'Claim Code' : 'Waybill') + '</span>' +
-      '<span style="color:#4ade80;font-weight:700;font-size:0.85rem">' + order.trackingNumber + '</span></div>' +
+      '<span style="color:#F43F5E;font-weight:700;font-size:0.85rem">' + order.trackingNumber + '</span></div>' +
       '<div style="display:flex;justify-content:space-between">' +
       '<span style="color:#6b7280;font-size:0.85rem">Total</span>' +
       '<span style="font-size:0.85rem">&#8369;' + (order.total || 0).toLocaleString() + '</span></div></div>' +
-      '<div style="text-align:center;padding:16px 0;border-top:1px solid #1e2a1e">' +
-      '<p style="color:#6b7280;font-size:0.8rem;margin:0">Contact: <strong style="color:#4ade80">@100201footballshop_</strong> on Instagram</p>' +
+      '<div style="text-align:center;padding:16px 0;border-top:1px solid #2e1319">' +
+      '<p style="color:#6b7280;font-size:0.8rem;margin:0">Contact: <strong style="color:#F43F5E">@100201footballshop_</strong> on Instagram</p>' +
       '<p style="color:#374151;font-size:0.72rem;margin:8px 0 0">2026 100201 Football Shop - Pasig City, Philippines</p></div></div></body></html>',
     text: msg + '\n\nOrder: ' + order.id + '\nCustomer: ' + (order.customer && order.customer.name) + '\n' + note + '\n\nTotal: P' + (order.total || 0).toLocaleString()
   };
@@ -285,15 +285,15 @@ function buildOtpEmail(name, otp) {
     html: '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#0d1117;font-family:Arial,sans-serif;color:#e2e8f0">' +
       '<div style="max-width:480px;margin:0 auto;padding:32px 16px">' +
       '<div style="text-align:center;margin-bottom:24px"><div style="font-size:2rem;font-weight:900;color:#fff">100201</div>' +
-      '<div style="font-size:0.75rem;color:#4ade80;letter-spacing:3px">FOOTBALL SHOP</div></div>' +
-      '<div style="background:#111a11;border:1px solid #1e2a1e;border-radius:12px;padding:32px;text-align:center">' +
+      '<div style="font-size:0.75rem;color:#F43F5E;letter-spacing:3px">FOOTBALL SHOP</div></div>' +
+      '<div style="background:#160e10;border:1px solid #2e1319;border-radius:12px;padding:32px;text-align:center">' +
       '<div style="font-size:2.5rem;margin-bottom:12px">🔐</div>' +
       '<h1 style="margin:0 0 8px;font-size:1.2rem;color:#fff">Verify Your Account</h1>' +
       '<p style="color:#6b7280;margin:0 0 24px">Hi <strong style="color:#fff">' + name + '</strong>, use the code below to verify your account.</p>' +
-      '<div style="background:#0d1117;border:2px solid #4ade80;border-radius:12px;padding:20px;margin-bottom:20px">' +
-      '<div style="font-size:2.5rem;font-weight:900;letter-spacing:12px;color:#4ade80;font-family:monospace">' + otp + '</div></div>' +
+      '<div style="background:#0d1117;border:2px solid #F43F5E;border-radius:12px;padding:20px;margin-bottom:20px">' +
+      '<div style="font-size:2.5rem;font-weight:900;letter-spacing:12px;color:#F43F5E;font-family:monospace">' + otp + '</div></div>' +
       '<p style="color:#6b7280;font-size:0.85rem;margin:0">This code expires in ' + expiryMin + ' minutes.<br>Do not share this code.</p></div>' +
-      '<div style="text-align:center;padding:16px 0;border-top:1px solid #1e2a1e;margin-top:20px">' +
+      '<div style="text-align:center;padding:16px 0;border-top:1px solid #2e1319;margin-top:20px">' +
       '<p style="color:#374151;font-size:0.72rem;margin:0">2026 100201 Football Shop - Pasig City, Philippines</p></div></div></body></html>',
     text: 'Your 100201 Football Shop verification code is: ' + otp + '\n\nThis code expires in ' + expiryMin + ' minutes.'
   };
@@ -764,3 +764,4 @@ initMailer().then(transport => {
     console.log('[100201 Server] Email mode: ' + (mailer ? 'Gmail SMTP' : 'Simulation (logged to file)'));
   });
 });
+

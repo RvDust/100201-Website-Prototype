@@ -1,5 +1,141 @@
 [
   {
+    "id": "100201-ORD-4171",
+    "date": "2026-10-10T12:31:09.885Z",
+    "fulfillmentMode": "pickup",
+    "customer": {
+      "name": "sai",
+      "email": "sinaiamonjearodriguez@gmail.com",
+      "phone": "+639617668255",
+      "address": "100201 Football Shop Counter, Ortigas Center",
+      "city": "Pasig City",
+      "postalCode": "1605",
+      "country": "Philippines",
+      "fulfillmentMode": "pickup"
+    },
+    "items": [
+      {
+        "id": "fb-kit-rm-9900-retro",
+        "name": "RETRO Real Madrid '99/'00 Home Kit",
+        "size": "S",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/rm-9900-1.jpg",
+        "customization": null
+      }
+    ],
+    "subtotal": 1100,
+    "discount": 0,
+    "shipping": 0,
+    "total": 1100,
+    "paymentMethod": {
+      "type": "pickup",
+      "brand": "Payment on Pick-up",
+      "accountName": "Store Collection Desk",
+      "accountNumber": "Pay at Store Counter",
+      "last4": "COUNTER",
+      "details": "Collect payment at store counter upon claiming"
+    },
+    "status": "Order Confirmed",
+    "carrier": "100201 Store Pick-up Counter",
+    "trackingNumber": "PK-100201-892740",
+    "estimatedDelivery": "Ready for Pick-up in 1-2 Hours (Same-Day Store Collection)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-10-10 20:31",
+        "description": "Reservation secured for store collection. Payment will be settled at 100201 counter.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic kit preparation & heat-press customization in progress.",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pick-up",
+        "timestamp": null,
+        "description": "Packaged & waiting at 100201 store counter for customer collection.",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "timestamp": null,
+        "description": "Order claimed & released to customer at 100201 store counter.",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "100201-ORD-5765",
+    "date": "2026-10-10T12:22:18.268Z",
+    "fulfillmentMode": "pickup",
+    "customer": {
+      "name": "sai",
+      "email": "sinaiamonjearodriguez@gmail.com",
+      "phone": "+639617668255",
+      "address": "100201 Football Shop Counter, Ortigas Center",
+      "city": "Pasig City",
+      "postalCode": "1605",
+      "country": "Philippines",
+      "fulfillmentMode": "pickup"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-aurora-25",
+        "name": "Barcelona '25 Special Aurora Kit",
+        "size": "M",
+        "quantity": 1,
+        "price": 1200,
+        "image": "assets/products/barca-aurora-1.jpg",
+        "customization": "RODRIGUEZ #04"
+      }
+    ],
+    "subtotal": 1200,
+    "discount": 0,
+    "shipping": 0,
+    "total": 1200,
+    "paymentMethod": {
+      "type": "pickup",
+      "brand": "Payment on Pick-up",
+      "accountName": "Store Collection Desk",
+      "accountNumber": "Pay at Store Counter",
+      "last4": "COUNTER",
+      "details": "Collect payment at store counter upon claiming"
+    },
+    "status": "Order Confirmed",
+    "carrier": "100201 Store Pick-up Counter",
+    "trackingNumber": "PK-100201-469668",
+    "estimatedDelivery": "Ready for Pick-up in 1-2 Hours (Same-Day Store Collection)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-10-10 20:22",
+        "description": "Reservation secured for store collection. Payment will be settled at 100201 counter.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic kit preparation & heat-press customization in progress.",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pick-up",
+        "timestamp": null,
+        "description": "Packaged & waiting at 100201 store counter for customer collection.",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "timestamp": null,
+        "description": "Order claimed & released to customer at 100201 store counter.",
+        "completed": false
+      }
+    ]
+  },
+  {
     "id": "100201-ORD-4618",
     "date": "2026-10-10T12:03:34.589Z",
     "fulfillmentMode": "pickup",
