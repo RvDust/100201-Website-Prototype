@@ -126,31 +126,60 @@ function setupMultiStepCheckout() {
   // Fulfillment Toggle buttons
   const btnDelivery = document.getElementById('fulfillment-btn-delivery');
   const btnPickup = document.getElementById('fulfillment-btn-pickup');
-  const addressInput = document.getElementById('checkout-address');
-  const addressLabel = document.getElementById('checkout-address-label');
 
   if (btnDelivery && btnPickup) {
-    btnDelivery.addEventListener('click', () => {
-      fulfillmentMode = 'delivery';
-      btnDelivery.classList.add('active');
-      btnPickup.classList.remove('active');
-      if (addressLabel) addressLabel.textContent = 'Delivery Street Address *';
-      if (addressInput) {
-        addressInput.value = 'Unit 14B, Sapphire Tower, Ortigas Center';
-        addressInput.readOnly = false;
-      }
-    });
+    btnDelivery.addEventListener('click', () => setFulfillmentMode('delivery'));
+    btnPickup.addEventListener('click', () => setFulfillmentMode('pickup'));
+  }
 
-    btnPickup.addEventListener('click', () => {
-      fulfillmentMode = 'pickup';
-      btnPickup.classList.add('active');
-      btnDelivery.classList.remove('active');
-      if (addressLabel) addressLabel.textContent = 'Store Pick-up Location *';
-      if (addressInput) {
-        addressInput.value = '100201 Football Shop Counter, Ortigas Center, Pasig City';
-        addressInput.readOnly = true;
+  // Setup inline new payment method field toggling
+  const newPmTypeSelect = document.getElementById('new-pm-type');
+  const newPmHelper = document.getElementById('new-pm-helper');
+  const newPmHolderGroup = document.getElementById('new-pm-holder-group');
+  const newPmNumberGroup = document.getElementById('new-pm-number-group');
+  const newPmHolderLabel = document.getElementById('new-pm-holder-label');
+  const newPmNumberLabel = document.getElementById('new-pm-number-label');
+
+  function updateNewPmFormFields() {
+    if (!newPmTypeSelect) return;
+    const val = newPmTypeSelect.value;
+    if (val === 'cod') {
+      if (newPmHelper) {
+        newPmHelper.style.display = 'block';
+        newPmHelper.innerHTML = '💵 <strong>Cash on Delivery (COD):</strong> Courier rider (J&T Express) will collect exact cash upon parcel arrival. No bank or card details required.';
       }
-    });
+      if (newPmHolderGroup) newPmHolderGroup.style.display = 'block';
+      if (newPmHolderLabel) newPmHolderLabel.textContent = 'Recipient / Receiver Name (Optional)';
+      if (newPmNumberGroup) newPmNumberGroup.style.display = 'none';
+    } else if (val === 'pickup') {
+      if (newPmHelper) {
+        newPmHelper.style.display = 'block';
+        newPmHelper.innerHTML = '📍 <strong>Payment on Store Pick-up:</strong> Pay via Cash, GCash QR, Maya, or POS card terminal at the 100201 store counter in Ortigas Center when claiming your kit.';
+      }
+      if (newPmHolderGroup) newPmHolderGroup.style.display = 'block';
+      if (newPmHolderLabel) newPmHolderLabel.textContent = 'Claimant Name (Optional)';
+      if (newPmNumberGroup) newPmNumberGroup.style.display = 'none';
+    } else {
+      if (newPmHelper) {
+        newPmHelper.style.display = val === 'gcash' || val === 'maya' || val === 'bdo' ? 'block' : 'none';
+        if (val === 'gcash') {
+          newPmHelper.innerHTML = '📱 <strong>GCash:</strong> Transfer to 0917-555-1201 (100201 Football Shop). Instant SMS notification.';
+        } else if (val === 'maya') {
+          newPmHelper.innerHTML = '📱 <strong>Maya:</strong> Transfer to 0917-555-1201 (100201 Football Shop). Instant receipt provided.';
+        } else if (val === 'bdo') {
+          newPmHelper.innerHTML = '🏦 <strong>BDO Unibank:</strong> Account 0041-8890-2101 (100201 SPORTS). Fast clearance.';
+        }
+      }
+      if (newPmHolderGroup) newPmHolderGroup.style.display = 'block';
+      if (newPmNumberGroup) newPmNumberGroup.style.display = 'block';
+      if (newPmHolderLabel) newPmHolderLabel.textContent = val === 'card' ? 'Cardholder Name *' : 'Account Holder Name *';
+      if (newPmNumberLabel) newPmNumberLabel.textContent = val === 'card' ? 'Card Number (16 Digits) *' : 'Account / Mobile Number *';
+    }
+  }
+
+  if (newPmTypeSelect) {
+    newPmTypeSelect.addEventListener('change', updateNewPmFormFields);
+    updateNewPmFormFields();
   }
 
   // Goto Step 2
@@ -159,12 +188,25 @@ function setupMultiStepCheckout() {
       const name = document.getElementById('checkout-name')?.value.trim();
       const email = document.getElementById('checkout-email')?.value.trim();
       const phone = document.getElementById('checkout-phone')?.value.trim();
-      const city = document.getElementById('checkout-city')?.value.trim();
-      const address = document.getElementById('checkout-address')?.value.trim();
 
-      if (!name || !email || !phone || !city || !address) {
-        window.showToast?.('Please fill in all required fulfillment details', 'error');
+      if (!name || !email || !phone) {
+        window.showToast?.('Please fill in your name, email, and mobile number', 'error');
         return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        window.showToast?.('Please enter a valid email address', 'error');
+        return;
+      }
+
+      if (fulfillmentMode === 'delivery') {
+        const city = document.getElementById('checkout-city')?.value.trim();
+        const address = document.getElementById('checkout-address')?.value.trim();
+
+        if (!city || !address) {
+          window.showToast?.('Please fill in your delivery street address and city', 'error');
+          return;
+        }
       }
 
       currentCheckoutStep = 2;
@@ -204,6 +246,67 @@ function setupMultiStepCheckout() {
     });
   }
 }
+
+export function setFulfillmentMode(mode) {
+  fulfillmentMode = mode === 'pickup' ? 'pickup' : 'delivery';
+  const isPickup = fulfillmentMode === 'pickup';
+
+  const btnDelivery = document.getElementById('fulfillment-btn-delivery');
+  const btnPickup = document.getElementById('fulfillment-btn-pickup');
+  const deliveryFields = document.getElementById('checkout-delivery-fields');
+  const pickupInfo = document.getElementById('checkout-pickup-info');
+  const nameLabel = document.getElementById('checkout-name-label');
+  const phoneLabel = document.getElementById('checkout-phone-label');
+  const addressInput = document.getElementById('checkout-address');
+  const cityInput = document.getElementById('checkout-city');
+
+  if (btnDelivery && btnPickup) {
+    if (isPickup) {
+      btnPickup.classList.add('active');
+      btnDelivery.classList.remove('active');
+    } else {
+      btnDelivery.classList.add('active');
+      btnPickup.classList.remove('active');
+    }
+  }
+
+  if (deliveryFields) deliveryFields.style.display = isPickup ? 'none' : 'block';
+  if (pickupInfo) pickupInfo.style.display = isPickup ? 'block' : 'none';
+
+  if (nameLabel) {
+    nameLabel.textContent = isPickup
+      ? 'Claimant Full Name (Person Collecting) *'
+      : 'Full Name *';
+  }
+  if (phoneLabel) {
+    phoneLabel.textContent = isPickup 
+      ? 'Mobile Number (Store Claim SMS / GCash) *' 
+      : 'Mobile Number (Courier SMS / GCash) *';
+  }
+
+  if (addressInput) addressInput.required = !isPickup;
+  if (cityInput) cityInput.required = !isPickup;
+
+  // Filter inline payment option dropdown in Step 2 if present
+  const newPmTypeSelect = document.getElementById('new-pm-type');
+  if (newPmTypeSelect) {
+    const codOpt = newPmTypeSelect.querySelector('option[value="cod"]');
+    const pickupOpt = newPmTypeSelect.querySelector('option[value="pickup"]');
+    if (codOpt) codOpt.hidden = isPickup;
+    if (pickupOpt) pickupOpt.hidden = !isPickup;
+    if (isPickup && newPmTypeSelect.value === 'cod') {
+      newPmTypeSelect.value = 'pickup';
+    } else if (!isPickup && newPmTypeSelect.value === 'pickup') {
+      newPmTypeSelect.value = 'cod';
+    }
+    newPmTypeSelect.dispatchEvent(new Event('change'));
+  }
+
+  renderCheckoutOrderSummary();
+  renderCheckoutPaymentMethods();
+}
+window.setFulfillmentMode = setFulfillmentMode;
+
 
 export function openCartDrawer() {
   if (auth.isMerchantLoggedIn() || store.getView() === 'admin') {
@@ -419,8 +522,7 @@ export function openCheckoutModal() {
     if (postalEl && !postalEl.value) postalEl.value = customer.postalCode || '1600';
   }
 
-  renderCheckoutOrderSummary();
-  renderCheckoutPaymentMethods();
+  setFulfillmentMode(fulfillmentMode || 'delivery');
 
   modalBackdrop.classList.add('open');
 }
@@ -433,9 +535,11 @@ export function closeCheckoutModal() {
 }
 
 function renderCheckoutOrderSummary() {
-  const summary = store.getCartSummary();
+  const summary = store.getCartSummary(fulfillmentMode);
   const summaryEl = document.getElementById('checkout-summary-breakdown');
   if (!summaryEl) return;
+
+  const isPickup = fulfillmentMode === 'pickup';
 
   summaryEl.innerHTML = `
     <div style="background: var(--bg-surface-elevated); padding: 0.85rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); margin-bottom: 1.25rem;">
@@ -450,8 +554,8 @@ function renderCheckoutOrderSummary() {
         </div>
       ` : ''}
       <div class="cart-summary-line">
-        <span>Delivery / Pickup:</span>
-        <span>${summary.shipping === 0 ? 'FREE' : store.formatPrice(summary.shipping)}</span>
+        <span>${isPickup ? 'Pick-up Fee:' : 'Delivery / Pickup:'}</span>
+        <span style="${isPickup ? 'color: var(--accent-pitch); font-weight: 700;' : ''}">${isPickup ? 'FREE (In-Store Collection)' : (summary.shipping === 0 ? 'FREE' : store.formatPrice(summary.shipping))}</span>
       </div>
       <div class="cart-summary-line total-line">
         <span>Total Due:</span>
@@ -470,13 +574,13 @@ export function renderCheckoutPaymentMethods() {
   const container = document.getElementById('checkout-payment-methods-list');
   if (!container) return;
 
-  const methods = store.getPaymentMethods();
+  const methods = store.getCheckoutPaymentMethods(fulfillmentMode);
 
   if (methods.length === 0) {
     container.innerHTML = `
       <div style="padding: 1.25rem; background: var(--bg-surface-elevated); border: 1px dashed var(--border-medium); border-radius: var(--radius-sm); text-align: center; color: var(--text-muted); font-size: 0.85rem;">
-        <p style="margin: 0 0 0.4rem; color: var(--text-primary); font-weight: 600;">No payment options saved to your account yet.</p>
-        <p style="margin: 0; font-size: 0.78rem;">Click <strong>"+ Add or Use Another Payment Option"</strong> below to save GCash, Maya, or Card to your account.</p>
+        <p style="margin: 0 0 0.4rem; color: var(--text-primary); font-weight: 600;">No payment options available.</p>
+        <p style="margin: 0; font-size: 0.78rem;">Click <strong>"+ Add or Use Another Payment Option"</strong> below to enter payment details.</p>
       </div>
     `;
     selectedPaymentMethodId = null;
@@ -484,6 +588,7 @@ export function renderCheckoutPaymentMethods() {
     return;
   }
 
+  // If current selectedPaymentMethodId is not available in current fulfillment mode, reselect default
   if (!selectedPaymentMethodId || !methods.some(m => m.id === selectedPaymentMethodId)) {
     const defaultMethod = methods.find(m => m.isDefault) || methods[0];
     selectedPaymentMethodId = defaultMethod ? defaultMethod.id : null;
@@ -491,12 +596,24 @@ export function renderCheckoutPaymentMethods() {
 
   container.innerHTML = methods.map(pm => {
     const isSelected = pm.id === selectedPaymentMethodId;
-    const badgeClass = pm.type === 'gcash' ? 'pm-icon-gcash' : 
+    const badgeClass = pm.type === 'cod' ? 'pm-icon-cod' :
+                       pm.type === 'pickup' ? 'pm-icon-pickup' :
+                       pm.type === 'gcash' ? 'pm-icon-gcash' : 
                        pm.type === 'maya' ? 'pm-icon-maya' : 
-                       pm.type === 'bdo' ? 'pm-icon-bdo' : 
-                       pm.type === 'pickup' ? 'pm-icon-pickup' : 'pm-icon-card';
-    const badgeText = pm.badgeText || (pm.type === 'gcash' ? 'GCASH' : pm.type === 'maya' ? 'MAYA' : pm.type === 'bdo' ? 'BDO' : 'CARD');
-    const title = pm.brand || (pm.type === 'gcash' ? 'GCash' : pm.type === 'maya' ? 'Maya' : 'Credit Card');
+                       pm.type === 'bdo' || pm.type === 'bank' ? 'pm-icon-bdo' : 'pm-icon-card';
+    const badgeText = pm.badgeText || (
+      pm.type === 'cod' ? 'COD' :
+      pm.type === 'pickup' ? 'PICKUP' :
+      pm.type === 'gcash' ? 'GCASH' :
+      pm.type === 'maya' ? 'MAYA' :
+      pm.type === 'bdo' || pm.type === 'bank' ? 'BDO' : 'CARD'
+    );
+    const title = pm.brand || (
+      pm.type === 'cod' ? 'Cash on Delivery (COD)' :
+      pm.type === 'pickup' ? 'Payment on Pick-up' :
+      pm.type === 'gcash' ? 'GCash' :
+      pm.type === 'maya' ? 'Maya' : 'Credit Card'
+    );
     const sub = pm.accountNumber || (pm.last4 ? `•••• ${pm.last4}` : pm.accountName);
 
     return `
@@ -509,6 +626,7 @@ export function renderCheckoutPaymentMethods() {
             <span class="pm-sub">${sub}</span>
           </div>
         </div>
+        ${pm.isSaved ? '<span class="pm-default-tag" style="background:rgba(255,255,255,0.08); border-color:var(--border-medium); color:var(--text-secondary); margin-right:4px;">Saved</span>' : ''}
         ${pm.isDefault ? '<span class="pm-default-tag">Default</span>' : ''}
       </div>
     `;
@@ -529,30 +647,36 @@ function updatePaymentCalloutText() {
   const callout = document.getElementById('ph-payment-callout');
   if (!callout) return;
 
-  const methods = store.getPaymentMethods();
+  const methods = store.getCheckoutPaymentMethods(fulfillmentMode);
   const pm = methods.find(m => m.id === selectedPaymentMethodId) || methods[0];
+  const summary = store.getCartSummary(fulfillmentMode);
 
   if (!pm) return;
 
-  if (pm.type === 'gcash') {
+  if (pm.type === 'cod') {
+    callout.innerHTML = `
+      <div><strong>💵 Cash on Delivery (COD):</strong></div>
+      <div>Please prepare exact cash payment of <strong>${store.formatPrice(summary.finalTotal)}</strong> for the courier rider (J&T Express) upon delivery. No advance payment or card details required.</div>
+    `;
+  } else if (pm.type === 'pickup') {
+    callout.innerHTML = `
+      <div><strong>📍 Payment on Store Pick-up:</strong></div>
+      <div>Pay <strong>${store.formatPrice(summary.finalTotal)}</strong> in cash, GCash QR, Maya, or POS card terminal at our store collection counter (Ortigas Center, Pasig City) upon inspecting and claiming your kit.</div>
+    `;
+  } else if (pm.type === 'gcash') {
     callout.innerHTML = `
       <div><strong>🇵🇭 GCash Mobile Wallet:</strong></div>
-      <div>Send payment to <strong>0917-555-1201 (100201 Football Shop)</strong>. Your order is registered immediately and heat-press dispatch begins upon confirmation.</div>
+      <div>Send payment to <strong>0917-555-1201 (100201 Football Shop)</strong>. Your order is registered immediately and kit printing begins upon confirmation.</div>
     `;
   } else if (pm.type === 'maya') {
     callout.innerHTML = `
       <div><strong>🇵🇭 Maya (PayMaya):</strong></div>
       <div>Send payment via Maya wallet to <strong>0917-555-1201 (100201 Football Shop)</strong>. Instant SMS receipt provided.</div>
     `;
-  } else if (pm.type === 'bdo') {
+  } else if (pm.type === 'bdo' || pm.type === 'bank') {
     callout.innerHTML = `
       <div><strong>🇵🇭 BDO Bank Transfer:</strong></div>
-      <div>Account Number: <strong>0041-8890-2101</strong> &bull; Account Name: <strong>100201 SPORTS</strong>. Upload your transaction slip for fast clearance.</div>
-    `;
-  } else if (pm.type === 'pickup') {
-    callout.innerHTML = `
-      <div><strong>📍 Cash on Store Pick-up:</strong></div>
-      <div>Pay in cash or GCash at our store collection desk in Ortigas Center upon inspecting your kit.</div>
+      <div>Account Number: <strong>0041-8890-2101</strong> &bull; Account Name: <strong>100201 SPORTS</strong>. Upload transaction slip for fast clearance.</div>
     `;
   } else {
     callout.innerHTML = `
@@ -562,7 +686,7 @@ function updatePaymentCalloutText() {
   }
 }
 
-function handlePlaceOrder(e) {
+async function handlePlaceOrder(e) {
   e.preventDefault();
 
   if (isPlacingOrder) {
@@ -576,7 +700,7 @@ function handlePlaceOrder(e) {
     return;
   }
 
-  const summary = store.getCartSummary();
+  const summary = store.getCartSummary(fulfillmentMode);
 
   // 1. Spending Cap Validation
   if (summary.finalTotal > MAX_ORDER_AMOUNT_PHP) {
@@ -606,56 +730,99 @@ function handlePlaceOrder(e) {
     const accountNumber = document.getElementById('new-card-number')?.value.trim();
     const saveAsDefault = document.getElementById('new-card-save-default')?.checked;
 
-    if (!accountName || !accountNumber) {
-      window.showToast?.('Please fill in complete payment details', 'error');
-      return;
-    }
-
-    const brandName = pmType === 'gcash' ? 'GCash' : pmType === 'maya' ? 'Maya' : pmType === 'bdo' ? 'BDO Bank' : 'Visa Card';
-    const newPm = store.addPaymentMethod({
-      type: pmType,
-      brand: brandName,
-      accountName,
-      accountNumber,
-      isDefault: saveAsDefault
-    });
-
-    chosenPaymentMethod = {
-      type: pmType,
-      brand: brandName,
-      last4: accountNumber.slice(-4)
-    };
-    if (newPm) {
-      selectedPaymentMethodId = newPm.id;
-    }
-  } else {
-    const methods = store.getPaymentMethods();
-    const pm = methods.find(m => m.id === selectedPaymentMethodId) || methods[0];
-    if (pm) {
+    if (pmType === 'cod') {
       chosenPaymentMethod = {
-        type: pm.type,
-        brand: pm.brand || 'GCash',
-        last4: pm.accountNumber?.slice(-4) || pm.last4 || '0101'
+        type: 'cod',
+        brand: 'Cash on Delivery (COD)',
+        accountName: accountName || 'Cash on Delivery',
+        accountNumber: 'Pay Cash to Courier Rider',
+        last4: 'CASH',
+        details: 'Collect cash upon courier parcel arrival'
+      };
+    } else if (pmType === 'pickup') {
+      chosenPaymentMethod = {
+        type: 'pickup',
+        brand: 'Payment on Pick-up',
+        accountName: accountName || 'Store Counter Collection',
+        accountNumber: 'Pay at Store Counter',
+        last4: 'COUNTER',
+        details: 'Collect payment at store counter upon claiming'
       };
     } else {
-      window.showToast?.('Please add a payment option (GCash, Maya, or Card) for your account', 'error');
-      if (newPmBox) {
-        newPmBox.classList.remove('collapsed');
-        const toggleBtn = document.getElementById('checkout-toggle-add-pm-btn');
-        if (toggleBtn) toggleBtn.textContent = 'Hide Payment Form';
+      if (!accountName || !accountNumber) {
+        window.showToast?.('Please fill in complete payment details', 'error');
+        return;
       }
+
+      const brandName = pmType === 'gcash' ? 'GCash' : pmType === 'maya' ? 'Maya' : pmType === 'bdo' ? 'BDO Bank' : 'Visa Card';
+      const newPm = store.addPaymentMethod({
+        type: pmType,
+        brand: brandName,
+        accountName,
+        accountNumber,
+        isDefault: saveAsDefault
+      });
+
+      chosenPaymentMethod = {
+        type: pmType,
+        brand: brandName,
+        last4: accountNumber.slice(-4)
+      };
+      if (newPm) {
+        selectedPaymentMethodId = newPm.id;
+      }
+    }
+  } else {
+    const methods = store.getCheckoutPaymentMethods(fulfillmentMode);
+    const pm = methods.find(m => m.id === selectedPaymentMethodId) || methods[0];
+    if (pm) {
+      if (pm.type === 'cod') {
+        chosenPaymentMethod = {
+          type: 'cod',
+          brand: 'Cash on Delivery (COD)',
+          accountName: pm.accountName || 'Cash on Delivery',
+          accountNumber: 'Pay Cash to Courier Rider',
+          last4: 'CASH',
+          details: 'Collect cash upon courier parcel arrival'
+        };
+      } else if (pm.type === 'pickup') {
+        chosenPaymentMethod = {
+          type: 'pickup',
+          brand: 'Payment on Pick-up',
+          accountName: pm.accountName || 'Store Counter Collection',
+          accountNumber: 'Pay at Store Counter',
+          last4: 'COUNTER',
+          details: 'Collect payment at store counter upon claiming'
+        };
+      } else {
+        chosenPaymentMethod = {
+          type: pm.type,
+          brand: pm.brand || (pm.type === 'gcash' ? 'GCash' : pm.type === 'maya' ? 'Maya' : pm.type === 'bdo' ? 'BDO Bank' : 'Credit Card'),
+          last4: pm.accountNumber?.slice(-4) || pm.last4 || '0101'
+        };
+      }
+    } else {
+      window.showToast?.('Please select a payment option to continue', 'error');
       return;
     }
   }
 
   const currentCust = auth.getCurrentCustomer();
+  const isPickup = fulfillmentMode === 'pickup';
+
   const customer = {
     name: document.getElementById('checkout-name')?.value.trim() || currentCust?.name || 'Football Fan',
     email: document.getElementById('checkout-email')?.value.trim() || currentCust?.email || 'customer@100201footballshop.ph',
     phone: document.getElementById('checkout-phone')?.value.trim() || currentCust?.phone || '+63 917 555 1201',
-    address: document.getElementById('checkout-address')?.value.trim() || currentCust?.address || 'Store Counter Collection',
-    city: document.getElementById('checkout-city')?.value.trim() || currentCust?.city || 'Pasig City',
-    postalCode: document.getElementById('checkout-postal')?.value.trim() || currentCust?.postalCode || '1605',
+    address: isPickup
+      ? '100201 Football Shop Counter, Ortigas Center'
+      : (document.getElementById('checkout-address')?.value.trim() || currentCust?.address || 'Ortigas Center'),
+    city: isPickup
+      ? 'Pasig City'
+      : (document.getElementById('checkout-city')?.value.trim() || currentCust?.city || 'Metro Manila'),
+    postalCode: isPickup
+      ? '1605'
+      : (document.getElementById('checkout-postal')?.value.trim() || currentCust?.postalCode || '1600'),
     country: 'Philippines',
     fulfillmentMode
   };
@@ -676,8 +843,17 @@ function handlePlaceOrder(e) {
       customer,
       items: cart,
       summary,
-      paymentMethod: chosenPaymentMethod
+      paymentMethod: chosenPaymentMethod,
+      fulfillmentMode
     });
+
+    // Send Order Confirmation Email
+    try {
+      const { apiClient } = await import('./apiClient.js');
+      await apiClient.sendOrderConfirmEmail(newOrder);
+    } catch (err) {
+      console.error('Failed to send order confirmation email:', err);
+    }
 
     isPlacingOrder = false;
     if (placeOrderBtn) {
@@ -706,6 +882,10 @@ function showOrderConfirmationScreen(order) {
   if (!confirmSection) return;
 
   const isUserAuth = auth.isCustomerLoggedIn() || auth.isMerchantLoggedIn();
+  const isPickup = order.fulfillmentMode === 'pickup' || (order.carrier && /pick-?up|counter/i.test(order.carrier));
+  const pm = order.paymentMethod || {};
+  const isCod = pm.type === 'cod';
+  const isCop = pm.type === 'pickup';
 
   confirmSection.style.display = 'block';
   confirmSection.innerHTML = `
@@ -715,20 +895,36 @@ function showOrderConfirmationScreen(order) {
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
       </div>
-      <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem; color: #FFFFFF;">Order Placed Successfully!</h2>
+      <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem; color: #FFFFFF;">
+        ${isPickup ? 'Pick-up Order Placed Successfully!' : 'Order Placed Successfully!'}
+      </h2>
       <p style="font-size: 0.9rem; max-width: 440px; margin: 0 auto 1.25rem; color: var(--text-secondary);">
-        Thank you, <strong>${order.customer.name}</strong>. Your ${order.items.length} kit order is registered for 100201 dispatch processing.
+        ${isPickup
+          ? `Thank you, <strong>${order.customer.name}</strong>. Your ${order.items.length} kit reservation is confirmed for in-store collection.`
+          : `Thank you, <strong>${order.customer.name}</strong>. Your ${order.items.length} kit order is registered for 100201 dispatch processing.`
+        }
       </p>
 
       <div class="order-id-badge">${order.id}</div>
 
       <div class="confirmation-next-steps">
-        <h5>Fulfillment & Tracking Summary</h5>
+        <h5>${isPickup ? 'Store Collection & Claim Code' : 'Fulfillment & Tracking Summary'}</h5>
         <div style="font-size: 0.88rem; color: var(--text-primary); font-weight: 600; margin-bottom: 0.4rem;">
-          ${order.customer.address}, ${order.customer.city}
+          ${isPickup ? '📍 100201 Football Shop Counter, Ortigas Center, Pasig City' : `${order.customer.address}, ${order.customer.city}`}
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">
-          Carrier: <strong>${order.carrier}</strong> &bull; Waybill: <code>${order.trackingNumber}</code>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+          ${isPickup
+            ? `Counter: <strong>${order.carrier}</strong> &bull; Claim Code: <code style="color:var(--accent-pitch); font-weight:700;">${order.trackingNumber}</code>`
+            : `Carrier: <strong>${order.carrier}</strong> &bull; Waybill: <code>${order.trackingNumber}</code>`
+          }
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-secondary); border-top: 1px dashed var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+          ${isCod
+            ? `Payment: <strong style="color:var(--accent-gold);">Cash on Delivery (COD)</strong> &bull; Collect from Rider: <strong>${store.formatPrice(order.total)}</strong>`
+            : isCop
+            ? `Payment: <strong style="color:var(--accent-pitch);">Payment on Pick-up</strong> &bull; Settle at Counter: <strong>${store.formatPrice(order.total)}</strong>`
+            : `Payment: <strong>${pm.brand || 'Prepaid'}</strong> &bull; Total Settled: <strong>${store.formatPrice(order.total)}</strong>`
+          }
         </div>
       </div>
 
@@ -738,7 +934,7 @@ function showOrderConfirmationScreen(order) {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
-            Track Shipment Live
+            ${isPickup ? 'Track Pick-up Status' : 'Track Shipment Live'}
           </button>
         ` : ''}
         <button id="finish-checkout-btn" class="${isUserAuth ? 'btn btn-secondary' : 'btn btn-primary'}">

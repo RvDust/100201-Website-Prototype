@@ -329,5 +329,5 @@ export function showToast(message, type = 'normal') {
     setTimeout(() => {
       toast.remove();
     }, 250);
-  }, 3200);
+  }, 1500);
 }

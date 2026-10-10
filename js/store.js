@@ -6,6 +6,17 @@ export const MAX_ORDER_AMOUNT_PHP = 100000;
 export const MAX_ORDER_ITEMS = 15;
 export const MIN_ORDER_AMOUNT_PHP = 100;
 
+export function isPickupOrder(order) {
+  if (!order) return false;
+  if (order.fulfillmentMode === 'pickup' || order.fulfillmentType === 'pickup') return true;
+  if (order.customer?.fulfillmentMode === 'pickup') return true;
+  if (order.carrier && /pick-?up|store collection|counter/i.test(order.carrier)) return true;
+  if (order.customer?.address && /shop counter|pick-?up|counter collection/i.test(order.customer.address)) return true;
+  if (order.trackingNumber && /^(PK|PICKUP)-/i.test(order.trackingNumber)) return true;
+  if (order.paymentMethod?.type === 'pickup') return true;
+  return false;
+}
+
 class Store {
   constructor() {
     this.subscribers = {
@@ -226,11 +237,22 @@ class Store {
   }
 
   addToCart(product, size, customization = '', quantity = 1) {
+    const maxStock = product.stock?.[size] || 0;
     const cartItemId = `${product.id}-${size}-${customization.trim().toUpperCase()}`;
     const existingIndex = this.cart.findIndex(item => item.cartItemId === cartItemId);
 
+    let newQuantity = quantity;
     if (existingIndex > -1) {
-      this.cart[existingIndex].quantity += quantity;
+      newQuantity += this.cart[existingIndex].quantity;
+    }
+
+    if (newQuantity > maxStock) {
+      window.showToast?.(`Only ${maxStock} items available for this size.`, 'warning');
+      return;
+    }
+
+    if (existingIndex > -1) {
+      this.cart[existingIndex].quantity = newQuantity;
     } else {
       this.cart.push({
         cartItemId,
@@ -257,6 +279,12 @@ class Store {
 
     const item = this.cart.find(item => item.cartItemId === cartItemId);
     if (item) {
+      const product = this.getProductById(item.productId);
+      const maxStock = product?.stock?.[item.size] || 0;
+      if (newQuantity > maxStock) {
+        window.showToast?.(`Only ${maxStock} items available for this size.`, 'warning');
+        return;
+      }
       item.quantity = newQuantity;
       this.saveCart();
       this.notify('cart', this.cart);
@@ -293,13 +321,14 @@ class Store {
     return { success: false, message: 'Invalid code. Try "100201VIP" or "GOLAZO10"' };
   }
 
-  getCartSummary() {
+  getCartSummary(fulfillmentMode = 'delivery') {
     const subtotal = this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
     const discountAmount = Math.round((subtotal * this.discountPercent) / 100);
-    // Free nationwide shipping threshold: ₱1,500
+    // Free nationwide shipping threshold: ₱1,500; In-Store Pick-up is always FREE
+    const isPickup = fulfillmentMode === 'pickup';
     const shippingThreshold = 1500;
-    const shipping = subtotal >= shippingThreshold || subtotal === 0 ? 0 : 120;
+    const shipping = isPickup ? 0 : (subtotal >= shippingThreshold || subtotal === 0 ? 0 : 120);
     const finalTotal = Math.max(0, subtotal - discountAmount + shipping);
 
     return {
@@ -310,8 +339,9 @@ class Store {
       discountAmount,
       shipping,
       finalTotal,
-      freeShippingQualified: subtotal >= shippingThreshold,
-      freeShippingNeeded: Math.max(0, shippingThreshold - subtotal)
+      freeShippingQualified: isPickup || subtotal >= shippingThreshold,
+      freeShippingNeeded: isPickup ? 0 : Math.max(0, shippingThreshold - subtotal),
+      fulfillmentMode
     };
   }
 
@@ -325,6 +355,115 @@ class Store {
       return auth.getCurrentCustomerPaymentMethods();
     }
     return [];
+  }
+
+  // --- CHECKOUT PAYMENT METHODS (Contextual per fulfillment mode: COD vs Pick-up + Digital) ---
+  getCheckoutPaymentMethods(fulfillmentMode = 'delivery') {
+    const isPickup = fulfillmentMode === 'pickup';
+    const customerMethods = this.getPaymentMethods(); // saved in buyer account
+
+    const list = [];
+
+    // 1. If customer has saved payment methods, include them first
+    customerMethods.forEach(pm => {
+      // Filter out fulfillment-incompatible methods
+      if (pm.type === 'cod' && isPickup) return;
+      if (pm.type === 'pickup' && !isPickup) return;
+
+      list.push({
+        ...pm,
+        isSaved: true
+      });
+    });
+
+    // 2. Add contextual cash fulfillment method
+    if (isPickup) {
+      if (!list.some(m => m.type === 'pickup')) {
+        list.push({
+          id: 'pm-pickup-counter',
+          type: 'pickup',
+          brand: 'Payment on Pick-up',
+          accountName: 'Store Collection Desk',
+          accountNumber: 'Pay at Counter (Cash, GCash, or POS Terminal)',
+          badgeText: 'PICKUP',
+          isDefault: list.length === 0,
+          isBuiltin: true
+        });
+      }
+    } else {
+      if (!list.some(m => m.type === 'cod')) {
+        list.push({
+          id: 'pm-cod-nationwide',
+          type: 'cod',
+          brand: 'Cash on Delivery (COD)',
+          accountName: 'Pay Courier Rider',
+          accountNumber: 'Exact Cash Upon Arrival',
+          badgeText: 'COD',
+          isDefault: list.length === 0,
+          isBuiltin: true
+        });
+      }
+    }
+
+    // 3. Add standard Philippine digital options (GCash, Maya, BDO Bank Transfer, Card)
+    if (!list.some(m => m.type === 'gcash')) {
+      list.push({
+        id: 'pm-gcash-store',
+        type: 'gcash',
+        brand: 'GCash',
+        accountName: '100201 Football Shop',
+        accountNumber: '0917-555-1201',
+        badgeText: 'GCASH',
+        isDefault: false,
+        isBuiltin: true
+      });
+    }
+
+    if (!list.some(m => m.type === 'maya')) {
+      list.push({
+        id: 'pm-maya-store',
+        type: 'maya',
+        brand: 'Maya (PayMaya)',
+        accountName: '100201 Football Shop',
+        accountNumber: '0917-555-1201',
+        badgeText: 'MAYA',
+        isDefault: false,
+        isBuiltin: true
+      });
+    }
+
+    if (!list.some(m => m.type === 'bdo' || m.type === 'bank')) {
+      list.push({
+        id: 'pm-bdo-store',
+        type: 'bdo',
+        brand: 'BDO Bank Transfer',
+        accountName: '100201 SPORTS',
+        accountNumber: '0041-8890-2101',
+        badgeText: 'BDO',
+        isDefault: false,
+        isBuiltin: true
+      });
+    }
+
+    if (!list.some(m => m.type === 'card')) {
+      list.push({
+        id: 'pm-card-gateway',
+        type: 'card',
+        brand: 'Credit / Debit Card',
+        accountName: 'Online Card Gateway',
+        accountNumber: 'Visa / Mastercard / JCB',
+        badgeText: 'CARD',
+        isDefault: false,
+        isBuiltin: true
+      });
+    }
+
+    // Ensure a default is present if none marked
+    if (!list.some(m => m.isDefault) && list.length > 0) {
+      list[0].isDefault = true;
+    }
+
+    return list;
   }
 
   addPaymentMethod(pm) {
@@ -363,6 +502,16 @@ class Store {
   }
 
   createOrder(orderPayload) {
+    // 0. Stock Validation (Hard Check before creation)
+    for (const item of (orderPayload.items || [])) {
+      const prod = this.getProductById(item.productId);
+      if (!prod) throw new Error(`Product not found: ${item.name}`);
+      const available = prod.stock?.[item.size] || 0;
+      if (item.quantity > available) {
+        throw new Error(`Insufficient stock for ${item.name} (${item.size}). Only ${available} available.`);
+      }
+    }
+
     // 1. Cost Controls & Spending Cap Enforcement
     const totalAmount = orderPayload.summary?.finalTotal || 0;
     if (totalAmount > MAX_ORDER_AMOUNT_PHP) {
@@ -389,21 +538,103 @@ class Store {
       return recentDuplicate;
     }
 
+    const fulfillmentMode = orderPayload.fulfillmentMode || orderPayload.customer?.fulfillmentMode || 'delivery';
+    const isPickup = fulfillmentMode === 'pickup';
+    const pmType = orderPayload.paymentMethod?.type || 'gcash';
+
     const orderId = `100201-ORD-${Math.floor(1000 + Math.random() * 9000)}`;
     const now = new Date();
     const formattedNow = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
+    const carrier = isPickup ? '100201 Store Pick-up Counter' : 'J&T Express / Store Dispatch';
+    const trackingNumber = isPickup
+      ? `PK-100201-${Math.floor(100000 + Math.random() * 900000)}`
+      : `JT-100201-${Math.floor(100000 + Math.random() * 900000)}`;
+    const estimatedDelivery = isPickup
+      ? 'Ready for Pick-up in 1-2 Hours (Same-Day Store Collection)'
+      : '2-4 Business Days (Nationwide PH)';
+
+    const pickupStep1Desc = pmType === 'pickup'
+      ? 'Reservation secured for store collection. Payment will be settled at 100201 counter.'
+      : 'Payment acknowledged by 100201 Football Shop. Jersey reservation secured.';
+
+    const deliveryStep1Desc = pmType === 'cod'
+      ? 'Order confirmed for Cash on Delivery (COD). Exact cash will be collected by courier rider.'
+      : 'Payment acknowledged by 100201 Football Shop. Jersey reservation secured.';
+
+    const pickupTimeline = [
+      {
+        status: 'Order Confirmed',
+        timestamp: formattedNow,
+        description: pickupStep1Desc,
+        completed: true
+      },
+      {
+        status: 'Processing & Custom Printing',
+        timestamp: null,
+        description: 'Authentic kit preparation & heat-press customization in progress.',
+        completed: false
+      },
+      {
+        status: 'Ready for Pick-up',
+        timestamp: null,
+        description: 'Packaged & waiting at 100201 store counter for customer collection.',
+        completed: false
+      },
+      {
+        status: 'Picked Up',
+        timestamp: null,
+        description: 'Order claimed & released to customer at 100201 store counter.',
+        completed: false
+      }
+    ];
+
+    const deliveryTimeline = [
+      {
+        status: 'Order Confirmed',
+        timestamp: formattedNow,
+        description: deliveryStep1Desc,
+        completed: true
+      },
+      {
+        status: 'Processing & Custom Printing',
+        timestamp: null,
+        description: 'Authentic heat-press printing applied at store workshop.',
+        completed: false
+      },
+      {
+        status: 'Shipped',
+        timestamp: null,
+        description: 'Dispatched via courier partner (J&T / LBC Express).',
+        completed: false
+      },
+      {
+        status: 'Out for Delivery',
+        timestamp: null,
+        description: 'Courier rider is on delivery route.',
+        completed: false
+      },
+      {
+        status: 'Delivered',
+        timestamp: null,
+        description: 'Delivered to recipient address or collected in-store.',
+        completed: false
+      }
+    ];
+
     const newOrder = {
       id: orderId,
       date: now.toISOString(),
+      fulfillmentMode: isPickup ? 'pickup' : 'delivery',
       customer: {
         name: orderPayload.customer.name,
         email: orderPayload.customer.email,
         phone: orderPayload.customer.phone || '+63 917 000 1201',
-        address: orderPayload.customer.address,
-        city: orderPayload.customer.city,
-        postalCode: orderPayload.customer.postalCode,
-        country: orderPayload.customer.country || 'Philippines'
+        address: isPickup ? '100201 Football Shop Counter, Ortigas Center' : orderPayload.customer.address,
+        city: isPickup ? 'Pasig City' : (orderPayload.customer.city || 'Metro Manila'),
+        postalCode: isPickup ? '1605' : (orderPayload.customer.postalCode || '1600'),
+        country: orderPayload.customer.country || 'Philippines',
+        fulfillmentMode: isPickup ? 'pickup' : 'delivery'
       },
       items: orderPayload.items.map(item => ({
         id: item.productId,
@@ -416,45 +647,16 @@ class Store {
       })),
       subtotal: orderPayload.summary.subtotal,
       discount: orderPayload.summary.discountAmount,
-      shipping: orderPayload.summary.shipping,
-      total: orderPayload.summary.finalTotal,
+      shipping: isPickup ? 0 : orderPayload.summary.shipping,
+      total: isPickup
+        ? Math.max(0, orderPayload.summary.subtotal - orderPayload.summary.discountAmount)
+        : orderPayload.summary.finalTotal,
       paymentMethod: orderPayload.paymentMethod,
       status: 'Order Confirmed',
-      carrier: 'J&T Express / Store Dispatch',
-      trackingNumber: `JT-100201-${Math.floor(100000 + Math.random() * 900000)}`,
-      estimatedDelivery: '2-4 Business Days (Nationwide PH)',
-      timeline: [
-        {
-          status: 'Order Confirmed',
-          timestamp: formattedNow,
-          description: 'Payment acknowledged by 100201 Football Shop. Jersey reservation secured.',
-          completed: true
-        },
-        {
-          status: 'Processing & Custom Printing',
-          timestamp: null,
-          description: 'Authentic heat-press printing applied at store workshop.',
-          completed: false
-        },
-        {
-          status: 'Shipped',
-          timestamp: null,
-          description: 'Dispatched via courier partner (J&T / LBC Express).',
-          completed: false
-        },
-        {
-          status: 'Out for Delivery',
-          timestamp: null,
-          description: 'Courier rider is on delivery route.',
-          completed: false
-        },
-        {
-          status: 'Delivered',
-          timestamp: null,
-          description: 'Delivered to recipient address or collected in-store.',
-          completed: false
-        }
-      ]
+      carrier,
+      trackingNumber,
+      estimatedDelivery,
+      timeline: isPickup ? pickupTimeline : deliveryTimeline
     };
 
     // Deduct stock for ordered items
@@ -483,24 +685,115 @@ class Store {
     const now = new Date();
     const formattedNow = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-    order.status = newStatus;
-
-    const stages = [
-      'Order Confirmed',
-      'Processing & Custom Printing',
-      'Shipped',
-      'Out for Delivery',
-      'Delivered'
-    ];
+    const isPickup = isPickupOrder(order);
 
     if (newStatus === 'Cancelled') {
+      order.status = 'Cancelled';
       order.timeline.push({
         status: 'Cancelled',
         timestamp: formattedNow,
         description: 'Order was cancelled by 100201 Football Shop administration.',
         completed: true
       });
+      this.saveOrders();
+      this.notify('orders', this.orders);
+      return order;
+    }
+
+    if (isPickup) {
+      // Pick-up stage definitions (4 Stages)
+      const pickupStages = [
+        'Order Confirmed',
+        'Processing & Custom Printing',
+        'Ready for Pick-up',
+        'Picked Up'
+      ];
+
+      // Normalize status aliases for pickup
+      let canonicalStatus = newStatus;
+      const lower = newStatus.trim().toLowerCase();
+      if (lower.includes('ready') || lower.includes('shipped') || lower.includes('out for delivery')) {
+        canonicalStatus = 'Ready for Pick-up';
+      } else if (lower.includes('deliver') || lower.includes('picked') || lower.includes('complete')) {
+        canonicalStatus = 'Picked Up';
+      } else if (lower.includes('process') || lower.includes('print')) {
+        canonicalStatus = 'Processing & Custom Printing';
+      } else if (lower.includes('confirm')) {
+        canonicalStatus = 'Order Confirmed';
+      }
+
+      order.status = canonicalStatus;
+
+      // Update estimated delivery note based on status
+      if (canonicalStatus === 'Ready for Pick-up') {
+        order.estimatedDelivery = 'Ready for Collection Now at Store Counter';
+      } else if (canonicalStatus === 'Picked Up') {
+        order.estimatedDelivery = 'Claimed & Picked Up at Store Counter';
+      } else if (canonicalStatus === 'Processing & Custom Printing') {
+        order.estimatedDelivery = 'Preparing in Store Workshop (Ready in ~1 Hour)';
+      } else {
+        order.estimatedDelivery = 'Ready for Pick-up in 1-2 Hours (Same-Day Collection)';
+      }
+
+      // If existing timeline was courier-based (5 steps) or incomplete, migrate to pickup (4 steps)
+      if (!order.timeline || order.timeline.length !== 4 || order.timeline.some(t => t.status === 'Shipped')) {
+        order.timeline = [
+          {
+            status: 'Order Confirmed',
+            timestamp: order.timeline?.[0]?.timestamp || formattedNow,
+            description: 'Payment acknowledged by 100201 Football Shop. Jersey reservation secured.',
+            completed: true
+          },
+          {
+            status: 'Processing & Custom Printing',
+            timestamp: order.timeline?.[1]?.timestamp || null,
+            description: 'Authentic kit preparation & heat-press customization in progress.',
+            completed: false
+          },
+          {
+            status: 'Ready for Pick-up',
+            timestamp: order.timeline?.[2]?.timestamp || null,
+            description: 'Packaged & waiting at 100201 store counter for customer collection.',
+            completed: false
+          },
+          {
+            status: 'Picked Up',
+            timestamp: order.timeline?.[4]?.timestamp || order.timeline?.[3]?.timestamp || null,
+            description: 'Order claimed & released to customer at 100201 store counter.',
+            completed: false
+          }
+        ];
+      }
+
+      const targetIndex = pickupStages.findIndex(s => s.toLowerCase() === canonicalStatus.toLowerCase());
+      if (targetIndex !== -1) {
+        order.timeline = order.timeline.map((step, idx) => {
+          if (idx <= targetIndex) {
+            return {
+              ...step,
+              completed: true,
+              timestamp: step.timestamp || formattedNow
+            };
+          } else {
+            return {
+              ...step,
+              completed: false,
+              timestamp: null
+            };
+          }
+        });
+      }
     } else {
+      // Courier Delivery Flow (5 Stages)
+      const stages = [
+        'Order Confirmed',
+        'Processing & Custom Printing',
+        'Shipped',
+        'Out for Delivery',
+        'Delivered'
+      ];
+
+      order.status = newStatus;
       const targetIndex = stages.findIndex(s => s.toLowerCase() === newStatus.toLowerCase());
       if (targetIndex !== -1) {
         order.timeline = order.timeline.map((step, idx) => {

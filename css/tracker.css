@@ -754,3 +754,79 @@
   }
 }
 
+/* In-Store Pick-up Tracking Additions */
+.order-type-chip {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.order-type-chip.delivery-chip {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.carrier-dispatch-box-pickup {
+  border-color: rgba(245, 158, 11, 0.25);
+  background: linear-gradient(135deg, var(--bg-surface-elevated), rgba(245, 158, 11, 0.05));
+  margin-bottom: 1rem;
+}
+
+.carrier-icon-pickup {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+}
+
+.pickup-guidance-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px dashed rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.pickup-guidance-icon {
+  color: #FBBF24;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.pickup-guidance-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #FDE68A;
+  margin-bottom: 0.2rem;
+}
+
+.pickup-guidance-desc {
+  font-size: 0.83rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.pickup-location-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.18rem 0.5rem;
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+}
+
+

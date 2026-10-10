@@ -175,6 +175,24 @@ export class ApiClient {
   clearCache() {
     this.cache.clear();
   }
+
+  // --- Email Service Methods ---
+
+  async sendOtp(email, name) {
+    return this.post('/api/otp/send', { email, name });
+  }
+
+  async verifyOtp(email, otp) {
+    return this.post('/api/otp/verify', { email, otp });
+  }
+
+  async sendOrderConfirmEmail(order) {
+    return this.post('/api/email/order-confirm', { order });
+  }
+
+  async sendStatusUpdateEmail(order, newStatus) {
+    return this.post('/api/email/status-update', { order, newStatus });
+  }
 }
 
 export const apiClient = new ApiClient();

@@ -1,7 +1,7 @@
 // Order Tracking Controller for 100201 Football Shop
 // Strictly account-specific tracking with multi-order switcher & separate completed order history
 
-import { store } from './store.js';
+import { store, isPickupOrder } from './store.js';
 import { auth } from './auth.js';
 
 let activeTrackingOrderId = null;
@@ -14,7 +14,7 @@ export function registerUserOrder(orderId) {
 export function isOrderCompleted(order) {
   if (!order || !order.status) return false;
   const s = order.status.trim().toLowerCase();
-  return s === 'delivered' || s === 'completed' || s.includes('delivered') || s.includes('picked up');
+  return s === 'delivered' || s === 'completed' || s.includes('delivered') || s.includes('picked up') || s.includes('collected');
 }
 
 export function getUserOrders() {
@@ -187,7 +187,7 @@ export function renderTracker() {
               <circle cx="5.5" cy="18.5" r="2.5"></circle>
               <circle cx="18.5" cy="18.5" r="2.5"></circle>
             </svg>
-            Your Active Shipments (${activeOrders.length}):
+            Your Active Orders (${activeOrders.length}):
           </span>
           <div class="user-shipments-pills">
             ${activeOrders.map(o => `
@@ -273,22 +273,55 @@ export function renderTracker() {
 
 function renderActiveOrderCard(container, order) {
   const isDelivered = isOrderCompleted(order);
-  const stages = [
+  const isPickup = isPickupOrder(order);
+
+  const stages = isPickup ? [
+    { key: 'Order Confirmed', title: 'Order Confirmed', icon: 'check-circle' },
+    { key: 'Processing & Custom Printing', title: 'Processing & Printing', icon: 'tool' },
+    { key: 'Ready for Pick-up', title: 'Ready for Pick-up', icon: 'shopping-bag' },
+    { key: 'Picked Up', title: 'Picked Up', icon: 'package' }
+  ] : [
     { key: 'Order Confirmed', title: 'Order Confirmed', icon: 'check-circle' },
     { key: 'Processing & Custom Printing', title: 'Processing & Printing', icon: 'tool' },
     { key: 'Shipped', title: 'Shipped', icon: 'truck' },
     { key: 'Out for Delivery', title: 'Out for Delivery', icon: 'map-pin' },
-    { key: 'Delivered', title: 'Delivered / Picked Up', icon: 'package' }
+    { key: 'Delivered', title: 'Delivered / Received', icon: 'package' }
   ];
 
-  let currentStageIndex = stages.findIndex(s => s.key.toLowerCase() === order.status.toLowerCase());
-  if (currentStageIndex === -1 && order.status.toLowerCase().includes('processing')) currentStageIndex = 1;
-  if (currentStageIndex === -1 && order.status.toLowerCase().includes('shipped')) currentStageIndex = 2;
-  if (currentStageIndex === -1 && order.status.toLowerCase().includes('out')) currentStageIndex = 3;
-  if (currentStageIndex === -1 && isDelivered) currentStageIndex = 4;
-  if (currentStageIndex === -1) currentStageIndex = 0;
+  let currentStageIndex = -1;
+  const statusLower = (order.status || '').toLowerCase();
 
-  const progressPct = (currentStageIndex / (stages.length - 1)) * 100;
+  if (isPickup) {
+    currentStageIndex = stages.findIndex(s => s.key.toLowerCase() === statusLower);
+    if (currentStageIndex === -1 && (statusLower.includes('process') || statusLower.includes('print'))) currentStageIndex = 1;
+    if (currentStageIndex === -1 && (statusLower.includes('ready') || statusLower.includes('shipped') || statusLower.includes('out'))) currentStageIndex = 2;
+    if (currentStageIndex === -1 && isDelivered) currentStageIndex = 3;
+    if (currentStageIndex === -1) currentStageIndex = 0;
+  } else {
+    currentStageIndex = stages.findIndex(s => s.key.toLowerCase() === statusLower);
+    if (currentStageIndex === -1 && statusLower.includes('processing')) currentStageIndex = 1;
+    if (currentStageIndex === -1 && statusLower.includes('shipped')) currentStageIndex = 2;
+    if (currentStageIndex === -1 && statusLower.includes('out')) currentStageIndex = 3;
+    if (currentStageIndex === -1 && isDelivered) currentStageIndex = 4;
+    if (currentStageIndex === -1) currentStageIndex = 0;
+  }
+
+  const progressPct = stages.length > 1 ? (currentStageIndex / (stages.length - 1)) * 100 : 0;
+
+  // Status badge style
+  let badgeClass = 'badge-status-out-for-delivery';
+  let badgeText = order.status;
+  if (isDelivered) {
+    badgeClass = 'badge-status-delivered';
+    badgeText = isPickup ? '✓ Picked Up' : `✓ ${order.status}`;
+  } else if (isPickup && (statusLower.includes('ready') || currentStageIndex === 2)) {
+    badgeClass = 'badge-status-ready-pickup';
+    badgeText = '🛍️ Ready for Pick-up';
+  }
+
+  const fulfillmentNote = isPickup
+    ? (isDelivered ? 'Claimed & Picked Up at Store Counter' : (order.estimatedDelivery || 'Ready for Pick-up in 1-2 Hours (Same-Day Collection)'))
+    : (order.estimatedDelivery || (isDelivered ? 'Delivered & Received' : 'In Transit to Recipient'));
 
   container.innerHTML = `
     <div class="order-tracking-card ${isDelivered ? 'card-status-completed' : ''}">
@@ -296,29 +329,20 @@ function renderActiveOrderCard(container, order) {
         <div class="order-meta-group">
           <div class="order-meta-id">
             <span>${order.id}</span>
-            <span class="badge ${isDelivered ? 'badge-status-delivered' : 'badge-status-out-for-delivery'}">
-              ${isDelivered ? `✓ ${order.status}` : order.status}
+            <span class="badge ${badgeClass}">
+              ${badgeText}
             </span>
+            ${isPickup ? '<span class="order-type-chip">IN-STORE PICK-UP</span>' : '<span class="order-type-chip delivery-chip">COURIER DELIVERY</span>'}
           </div>
           <div class="order-meta-date">
             Placed on ${new Date(order.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
-            &bull; Fulfillment: <strong>${order.estimatedDelivery || (isDelivered ? 'Delivered & Received' : 'In Transit to Recipient')}</strong>
+            &bull; Fulfillment: <strong>${fulfillmentNote}</strong>
           </div>
-        </div>
-
-        <div style="display: flex; gap: 0.75rem; align-items: center;">
-          <button class="btn btn-secondary btn-sm" id="admin-switch-from-tracker-btn" title="Update status in Admin Portal">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-            Edit in Admin
-          </button>
         </div>
       </div>
 
-      <!-- Live 5-Stage Stepper -->
-      <div class="tracking-pipeline">
+      <!-- Live Pipeline Stepper (${stages.length} Stages) -->
+      <div class="tracking-pipeline ${isPickup ? 'tracking-pipeline-pickup' : ''}">
         <div class="pipeline-track">
           <div class="pipeline-progress-fill" style="width: ${progressPct}%"></div>
         </div>
@@ -342,29 +366,72 @@ function renderActiveOrderCard(container, order) {
       </div>
 
       <!-- Carrier & Dispatch Box -->
-      <div class="carrier-dispatch-box">
-        <div class="dispatch-left">
-          <div class="carrier-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
-              <circle cx="5.5" cy="18.5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+      ${isPickup ? `
+        <div class="carrier-dispatch-box carrier-dispatch-box-pickup">
+          <div class="dispatch-left">
+            <div class="carrier-icon carrier-icon-pickup">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <div class="carrier-info">
+              <h4>${order.carrier || '100201 Store Pick-up Counter'}</h4>
+              <p>Claim Code: <code>${order.trackingNumber}</code> &bull; Location: Ortigas Center, Pasig City</p>
+            </div>
+          </div>
+          <button class="tracking-copy-btn" id="copy-tracking-btn" data-code="${order.trackingNumber}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy Claim Code
+          </button>
+        </div>
+
+        <div class="pickup-guidance-card">
+          <div class="pickup-guidance-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>
           </div>
-          <div class="carrier-info">
-            <h4>${order.carrier}</h4>
-            <p>Tracking Code: <code>${order.trackingNumber}</code> &bull; Origin: Store Dispatch Logistics</p>
+          <div class="pickup-guidance-content">
+            <div class="pickup-guidance-title">Store Pick-up Counter Instructions</div>
+            <div class="pickup-guidance-desc">
+              Please present your Claim Code <strong>${order.trackingNumber}</strong> along with a valid ID at the 100201 store counter.
+              <div style="margin-top: 0.35rem; color: var(--text-muted); font-size: 0.8rem;">
+                Store Hours: <strong>Mon &ndash; Sat 10:00 AM &ndash; 8:00 PM</strong> &bull; Direct hotline: <strong>+63 917 555 1201</strong>
+              </div>
+            </div>
           </div>
         </div>
-        <button class="tracking-copy-btn" id="copy-tracking-btn" data-code="${order.trackingNumber}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-          Copy Tracking #
-        </button>
-      </div>
+      ` : `
+        <div class="carrier-dispatch-box">
+          <div class="dispatch-left">
+            <div class="carrier-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+            </div>
+            <div class="carrier-info">
+              <h4>${order.carrier}</h4>
+              <p>Tracking Code: <code>${order.trackingNumber}</code> &bull; Origin: Store Dispatch Logistics</p>
+            </div>
+          </div>
+          <button class="tracking-copy-btn" id="copy-tracking-btn" data-code="${order.trackingNumber}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy Tracking #
+          </button>
+        </div>
+      `}
 
       <!-- Split details: Ordered Items + Recipient & Payment -->
       <div class="order-details-split">
@@ -388,18 +455,48 @@ function renderActiveOrderCard(container, order) {
         </div>
 
         <div class="order-side-summary">
-          <div class="order-side-title">Delivery / Collection Address</div>
+          <div class="order-side-title">${isPickup ? 'Store Collection Point & Claimant' : 'Delivery Address'}</div>
           <div class="order-address-box">
-            <strong>${order.customer.name}</strong><br>
-            ${order.customer.address}<br>
-            ${order.customer.city} ${order.customer.postalCode}, ${order.customer.country}<br>
-            Contact: ${order.customer.phone}
+            ${isPickup ? `
+              <div style="margin-bottom: 0.65rem;">
+                <span class="pickup-location-pill">📍 In-Store Collection Point</span><br>
+                <strong>100201 Football Shop Counter</strong><br>
+                Unit 14B, Sapphire Tower, Ortigas Center<br>
+                Pasig City 1605, Philippines
+              </div>
+              <div style="border-top: 1px dashed var(--border-subtle); padding-top: 0.65rem; font-size: 0.82rem; color: var(--text-secondary);">
+                <strong>Claimant Name:</strong> ${order.customer.name}<br>
+                <strong>Mobile Contact:</strong> ${order.customer.phone}<br>
+                <strong>Email:</strong> ${order.customer.email}
+              </div>
+            ` : `
+              <strong>${order.customer.name}</strong><br>
+              ${order.customer.address}<br>
+              ${order.customer.city} ${order.customer.postalCode}, ${order.customer.country}<br>
+              Contact: ${order.customer.phone}
+            `}
           </div>
 
-          <div class="order-side-title">Payment Method</div>
+          <div class="order-side-title">Payment Settlement</div>
           <div class="order-address-box" style="margin-bottom: 0;">
-            <strong>${order.paymentMethod?.brand || 'GCash'}</strong> (${order.paymentMethod?.last4 || 'Direct'})<br>
-            Total Paid: <strong style="color:var(--accent-pitch); font-family:var(--font-display); font-size:1.1rem;">${store.formatPrice(order.total)}</strong>
+            ${order.paymentMethod?.type === 'cod' ? `
+              <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.3rem;">
+                <span class="pm-icon-badge pm-icon-cod" style="font-size:0.65rem; height:20px; width:36px; line-height:20px;">COD</span>
+                <strong>Cash on Delivery (Courier)</strong>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.35rem;">Pay exact cash to rider upon parcel inspection</div>
+              <div>${isDelivered ? 'Total Collected:' : 'Amount to Pay Rider:'} <strong style="color:var(--accent-gold); font-family:var(--font-display); font-size:1.1rem;">${store.formatPrice(order.total)}</strong></div>
+            ` : order.paymentMethod?.type === 'pickup' ? `
+              <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.3rem;">
+                <span class="pm-icon-badge pm-icon-pickup" style="font-size:0.65rem; height:20px; width:48px; line-height:20px;">PICKUP</span>
+                <strong>Payment on Pick-up</strong>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.35rem;">Pay via Cash, GCash, or Card at 100201 store desk</div>
+              <div>${isDelivered ? 'Total Settled:' : 'Amount Due at Counter:'} <strong style="color:var(--accent-pitch); font-family:var(--font-display); font-size:1.1rem;">${store.formatPrice(order.total)}</strong></div>
+            ` : `
+              <strong>${order.paymentMethod?.brand || 'GCash Mobile'}</strong> (${order.paymentMethod?.last4 ? `•••• ${order.paymentMethod.last4}` : 'Settled'})<br>
+              <div style="margin-top:0.25rem;">Total Settled: <strong style="color:var(--accent-pitch); font-family:var(--font-display); font-size:1.1rem;">${store.formatPrice(order.total)}</strong></div>
+            `}
           </div>
         </div>
       </div>
@@ -410,34 +507,29 @@ function renderActiveOrderCard(container, order) {
   if (copyBtn) {
     copyBtn.addEventListener('click', () => {
       const code = copyBtn.dataset.code;
+      const label = isPickup ? 'Claim code' : 'Tracking code';
       navigator.clipboard?.writeText(code).then(() => {
-        window.showToast?.(`Tracking code ${code} copied!`, 'info');
+        window.showToast?.(`${label} ${code} copied!`, 'info');
       }).catch(() => {
-        window.showToast?.(`Tracking code: ${code}`, 'info');
+        window.showToast?.(`${label}: ${code}`, 'info');
       });
-    });
-  }
-
-  const adminSwitchBtn = document.getElementById('admin-switch-from-tracker-btn');
-  if (adminSwitchBtn) {
-    adminSwitchBtn.addEventListener('click', () => {
-      window.navigateToView?.('admin');
-      setTimeout(() => {
-        document.querySelector('.admin-tab-btn[data-admin-tab="orders"]')?.click();
-      }, 50);
     });
   }
 }
 
 function renderOrderHistoryList(container, completedOrders) {
   container.innerHTML = completedOrders.map(order => {
+    const isPickup = isPickupOrder(order);
     const placedDateStr = new Date(order.date).toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
-    const deliveredStep = order.timeline?.find(t => t.status.toLowerCase().includes('deliver'));
-    const deliveredTimeStr = deliveredStep?.timestamp || placedDateStr;
+    const completedStep = order.timeline?.find(t => {
+      const st = (t.status || '').toLowerCase();
+      return st.includes('deliver') || st.includes('picked') || st.includes('complete');
+    });
+    const completedTimeStr = completedStep?.timestamp || placedDateStr;
 
     return `
       <div class="order-history-card" data-order-id="${order.id}">
@@ -448,18 +540,22 @@ function renderOrderHistoryList(container, completedOrders) {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block; vertical-align:middle; margin-right:4px;">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              Delivered
+              ${isPickup ? 'Picked Up' : 'Delivered'}
             </span>
+            ${isPickup ? '<span class="order-type-chip">IN-STORE PICK-UP</span>' : '<span class="order-type-chip delivery-chip">COURIER</span>'}
           </div>
 
           <div class="order-history-meta-block">
             <div class="order-history-date">
-              <span>Delivered: <strong>${deliveredTimeStr}</strong></span>
+              <span>${isPickup ? 'Picked Up' : 'Delivered'}: <strong>${completedTimeStr}</strong></span>
               <span class="meta-dot">&bull;</span>
               <span>Placed: ${placedDateStr}</span>
             </div>
             <div class="order-history-total">
               ${store.formatPrice(order.total)}
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:normal; text-align:right;">
+                ${order.paymentMethod?.type === 'cod' ? 'COD (Paid Rider)' : order.paymentMethod?.type === 'pickup' ? 'Paid at Counter' : (order.paymentMethod?.brand || 'Paid')}
+              </div>
             </div>
           </div>
         </div>
@@ -483,13 +579,21 @@ function renderOrderHistoryList(container, completedOrders) {
 
         <div class="order-history-card-footer">
           <div class="order-history-courier-info">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
-              <circle cx="5.5" cy="18.5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
-            </svg>
-            <span>${order.carrier} &bull; Waybill: <code>${order.trackingNumber}</code></span>
+            ${isPickup ? `
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span>Store Counter Collection &bull; Claim Code: <code>${order.trackingNumber}</code></span>
+            ` : `
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              <span>${order.carrier} &bull; Waybill: <code>${order.trackingNumber}</code></span>
+            `}
           </div>
 
           <div class="order-history-actions">
@@ -498,7 +602,7 @@ function renderOrderHistoryList(container, completedOrders) {
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
-              Copy Waybill
+              ${isPickup ? 'Copy Claim Code' : 'Copy Waybill'}
             </button>
             <button class="btn btn-primary btn-sm view-history-timeline-btn" data-order-id="${order.id}">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -518,9 +622,9 @@ function renderOrderHistoryList(container, completedOrders) {
       e.stopPropagation();
       const code = btn.dataset.code;
       navigator.clipboard?.writeText(code).then(() => {
-        window.showToast?.(`Tracking code ${code} copied!`, 'info');
+        window.showToast?.(`Code ${code} copied!`, 'info');
       }).catch(() => {
-        window.showToast?.(`Tracking code: ${code}`, 'info');
+        window.showToast?.(`Code: ${code}`, 'info');
       });
     });
   });
@@ -545,6 +649,8 @@ function getStageSvgIcon(iconName) {
       return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>`;
     case 'map-pin':
       return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`;
+    case 'shopping-bag':
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>`;
     case 'package':
     default:
       return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`;

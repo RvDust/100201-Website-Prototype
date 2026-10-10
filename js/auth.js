@@ -1,6 +1,49 @@
 // Authentication & Access Control Controller for 100201 Football Shop
 // Provides separated Customer Authentication and Cryptographically Secured Merchant Portal Access
 
+import { apiClient } from './apiClient.js';
+
+// --- Credential Validation Helpers ---
+export function validateEmail(email) {
+  const trimmed = (email || '').trim();
+  if (!trimmed) return { valid: false, error: 'Email address is required.' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed)) {
+    return { valid: false, error: 'Please enter a valid email address (e.g. name@example.com).' };
+  }
+  return { valid: true };
+}
+
+export function validatePhone(phone) {
+  const trimmed = (phone || '').trim();
+  if (!trimmed) return { valid: false, error: 'Mobile number is required.' };
+  const digits = trimmed.replace(/[\s\-\(\)\+]/g, '');
+  // Accept Philippine numbers: 09XXXXXXXXX (11 digits) or +639XXXXXXXXX (12 digits)
+  if (!/^(09\d{9}|639\d{9}|\+639\d{9})$/.test(digits)) {
+    return { valid: false, error: 'Please enter a valid Philippine mobile number (e.g. 0917-XXX-XXXX).' };
+  }
+  return { valid: true };
+}
+
+export function validatePassword(password) {
+  const p = password || '';
+  if (p.length < 6) return { valid: false, error: 'Password must be at least 6 characters long.' };
+  if (p.length > 128) return { valid: false, error: 'Password must be less than 128 characters.' };
+  if (!/[a-zA-Z]/.test(p)) return { valid: false, error: 'Password must contain at least one letter.' };
+  if (!/[0-9]/.test(p)) return { valid: false, error: 'Password must contain at least one number.' };
+  return { valid: true };
+}
+
+export function validateName(name) {
+  const trimmed = (name || '').trim();
+  if (!trimmed) return { valid: false, error: 'Full name is required.' };
+  if (trimmed.length < 2) return { valid: false, error: 'Name must be at least 2 characters long.' };
+  if (trimmed.length > 100) return { valid: false, error: 'Name must be less than 100 characters.' };
+  if (!/^[a-zA-Z\s\-\'\u00C0-\u024F]+$/.test(trimmed)) {
+    return { valid: false, error: 'Name can only contain letters, spaces, hyphens, and apostrophes.' };
+  }
+  return { valid: true };
+}
+
 const MERCHANT_SALT = "100201_PASIG_SALT_2026";
 const MERCHANT_HASH = "1afbc5c225084df1d34a11e5c5a548c66e4025bcb173ad9ab1bb4edef0761373"; // SHA-256(salt + 'admin')
 const MERCHANT_VALID_USERS = ["admin@100201footballshop.ph", "admin"];
@@ -235,9 +278,20 @@ class AuthService {
       return { success: false, error: 'An account with this email already exists. Please sign in.' };
     }
 
-    if (!customerData.password || customerData.password.length < 6) {
-      return { success: false, error: 'Password must be at least 6 characters long.' };
+    // Validate all credentials
+    const nameCheck = validateName(customerData.name || '');
+    if (!nameCheck.valid) return { success: false, error: nameCheck.error };
+
+    const emailCheck = validateEmail(cleanEmail);
+    if (!emailCheck.valid) return { success: false, error: emailCheck.error };
+
+    if (customerData.phone) {
+      const phoneCheck = validatePhone(customerData.phone);
+      if (!phoneCheck.valid) return { success: false, error: phoneCheck.error };
     }
+
+    const passCheck = validatePassword(customerData.password || '');
+    if (!passCheck.valid) return { success: false, error: passCheck.error };
 
     const hashedPassword = await this.hashPassword(cleanEmail, customerData.password);
 
@@ -627,10 +681,52 @@ function setupCustomerAuthModal() {
     });
   }
 
-  // Handle Register Form Submit
+  // Handle Register Form Submit — with OTP Email Verification
   if (formRegister) {
+    // Track OTP state
+    let otpSent = false;
+    let pendingRegisterData = null;
+
     formRegister.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // --- Stage 2: OTP Verification ---
+      const otpInputEl = document.getElementById('auth-otp-input');
+      if (otpSent && otpInputEl) {
+        const otpValue = otpInputEl.value.trim();
+        if (!otpValue || otpValue.length < 4) {
+          showAuthError('Please enter the verification code sent to your email.');
+          return;
+        }
+
+        const submitBtn = formRegister.querySelector('button[type="submit"]');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Verifying...'; }
+
+        const verifyRes = await apiClient.verifyOtp(pendingRegisterData.email, otpValue);
+
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Verify & Create Account';
+        }
+
+        if (!verifyRes.ok) {
+          showAuthError(verifyRes.data?.error || 'Incorrect verification code. Please try again.');
+          return;
+        }
+
+        // OTP verified — create the account
+        const regRes = await auth.customerRegister(pendingRegisterData);
+        if (!regRes.success) {
+          showAuthError(regRes.error);
+          return;
+        }
+
+        window.showToast?.(`Account verified! Welcome, ${regRes.customer.name}!`, 'normal');
+        finishAuthSuccess();
+        return;
+      }
+
+      // --- Stage 1: Collect + Validate + Send OTP ---
       const name = document.getElementById('reg-name')?.value || '';
       const email = document.getElementById('reg-email')?.value || '';
       const phone = document.getElementById('reg-phone')?.value || '';
@@ -645,23 +741,84 @@ function setupCustomerAuthModal() {
         return;
       }
 
-      const res = await auth.customerRegister({
-        name,
-        email,
-        phone,
-        address,
-        city,
-        postalCode,
-        password
-      });
+      // Client-side validation
+      const { validateName, validateEmail, validatePhone, validatePassword } = await import('./auth.js');
+      const checks = [
+        validateName(name),
+        validateEmail(email),
+        phone ? validatePhone(phone) : { valid: true },
+        validatePassword(password)
+      ];
+      const failed = checks.find(c => !c.valid);
+      if (failed) { showAuthError(failed.error); return; }
 
-      if (!res.success) {
-        showAuthError(res.error);
+      const submitBtn = formRegister.querySelector('button[type="submit"]');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending Verification Code...'; }
+
+      // Send OTP
+      const otpRes = await apiClient.sendOtp(email.trim(), name.trim());
+
+      if (submitBtn) { submitBtn.disabled = false; }
+
+      if (!otpRes.ok) {
+        showAuthError(otpRes.data?.error || 'Failed to send verification code. Please try again.');
         return;
       }
 
-      window.showToast?.(`Account created! Welcome, ${res.customer.name}!`, 'normal');
-      finishAuthSuccess();
+      // Store pending data
+      pendingRegisterData = { name, email, phone, address, city, postalCode, password };
+      otpSent = true;
+
+      // Inject OTP input into the form
+      const existingOtpBox = document.getElementById('auth-otp-box');
+      if (!existingOtpBox) {
+        const otpBox = document.createElement('div');
+        otpBox.id = 'auth-otp-box';
+        otpBox.className = 'auth-otp-verification-box';
+        otpBox.innerHTML = `
+          <div class="auth-otp-icon">📧</div>
+          <div class="auth-otp-title">Check Your Email</div>
+          <div class="auth-otp-subtitle">We sent a 6-digit verification code to <strong>${email}</strong></div>
+          <div class="auth-input-group" style="margin-top:12px">
+            <label for="auth-otp-input">Verification Code</label>
+            <div class="auth-input-wrapper">
+              <input type="text" id="auth-otp-input" placeholder="000000" maxlength="6"
+                inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code"
+                style="text-align:center;font-size:1.5rem;letter-spacing:0.5rem;font-weight:700;font-family:monospace">
+            </div>
+          </div>
+          <button type="button" id="auth-otp-resend-btn" class="auth-otp-resend-btn">Resend Code</button>
+          ${otpRes.data?.devOtp ? `<div class="auth-otp-dev-notice">🔧 Dev Mode: <strong>${otpRes.data.devOtp}</strong></div>` : ''}
+        `;
+        formRegister.insertBefore(otpBox, formRegister.querySelector('button[type="submit"]'));
+
+        // Auto-focus OTP input
+        setTimeout(() => { document.getElementById('auth-otp-input')?.focus(); }, 50);
+
+        // Resend handler
+        document.getElementById('auth-otp-resend-btn')?.addEventListener('click', async () => {
+          const resendBtn = document.getElementById('auth-otp-resend-btn');
+          if (resendBtn) { resendBtn.disabled = true; resendBtn.textContent = 'Sending...'; }
+          const resendRes = await apiClient.sendOtp(pendingRegisterData.email, pendingRegisterData.name);
+          if (resendBtn) {
+            resendBtn.disabled = false;
+            resendBtn.textContent = resendRes.ok ? 'Code Resent! ✓' : 'Resend Code';
+            setTimeout(() => { resendBtn.textContent = 'Resend Code'; }, 3000);
+          }
+          if (resendRes.data?.devOtp) {
+            const devNote = otpBox.querySelector('.auth-otp-dev-notice');
+            if (devNote) devNote.innerHTML = '🔧 Dev Mode: <strong>' + resendRes.data.devOtp + '</strong>';
+          }
+        });
+      }
+
+      // Update submit button for OTP stage
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Verify & Create Account';
+      }
+
+      window.showToast?.('Verification code sent to your email!', 'info');
     });
   }
 }

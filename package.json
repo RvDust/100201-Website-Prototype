@@ -6,7 +6,16 @@
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["football", "kits", "merchandise", "ecommerce", "admin"],
+  "keywords": [
+    "football",
+    "kits",
+    "merchandise",
+    "ecommerce",
+    "admin"
+  ],
   "author": "Antigravity",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nodemailer": "^10.1.0"
+  }
 }

@@ -427,6 +427,123 @@
   margin-top: 0.15rem;
 }
 
+/* Checkout In-Store Pick-up Card */
+.checkout-pickup-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  transition: var(--transition-fast);
+}
+
+.checkout-pickup-card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.checkout-pickup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.checkout-pickup-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.checkout-pickup-badge svg {
+  color: var(--accent-pitch);
+}
+
+.checkout-pickup-free-tag {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.checkout-pickup-store-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.35rem;
+}
+
+.checkout-pickup-address {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  line-height: 1.4;
+  margin-bottom: 0.85rem;
+}
+
+.checkout-pickup-address svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-muted);
+}
+
+.checkout-pickup-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.75rem;
+}
+
+.checkout-pickup-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.checkout-pickup-meta-item .meta-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.checkout-pickup-meta-item .meta-value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.checkout-pickup-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.checkout-pickup-notice svg {
+  flex-shrink: 0;
+  color: #60A5FA;
+  margin-top: 1px;
+}
+
 /* Section Header */
 .checkout-section-header {
   font-size: 0.95rem;
@@ -534,6 +651,12 @@
 .pm-icon-pickup {
   background: #0d3824;
   color: #34D399;
+}
+
+.pm-icon-cod {
+  background: #261B0B;
+  color: #FBBF24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
 }
 
 .pm-details {

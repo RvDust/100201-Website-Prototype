@@ -949,9 +949,10 @@
                 </button>
               </div>
 
+              <!-- Contact Information (Required for both Delivery & Pick-up) -->
               <div class="checkout-grid-2">
                 <div class="checkout-form-group">
-                  <label class="checkout-form-label" for="checkout-name">Full Name *</label>
+                  <label class="checkout-form-label" for="checkout-name" id="checkout-name-label">Full Name *</label>
                   <input type="text" id="checkout-name" placeholder="e.g. Juan Carlo Bautista" required>
                 </div>
                 <div class="checkout-form-group">
@@ -960,32 +961,74 @@
                 </div>
               </div>
 
-              <div class="checkout-grid-2">
-                <div class="checkout-form-group">
-                  <label class="checkout-form-label" for="checkout-phone">Mobile Number (GCash / Courier SMS) *</label>
-                  <input type="text" id="checkout-phone" placeholder="e.g. 0917-555-1201" required>
+              <div class="checkout-form-group" style="margin-bottom: 0.85rem;">
+                <label class="checkout-form-label" for="checkout-phone" id="checkout-phone-label">Mobile Number (GCash / Courier SMS) *</label>
+                <input type="tel" id="checkout-phone" placeholder="e.g. 0917-555-1201" required>
+              </div>
+
+              <!-- DELIVERY ONLY FIELDS -->
+              <div id="checkout-delivery-fields">
+                <div class="checkout-form-group" id="checkout-address-group">
+                  <label class="checkout-form-label" for="checkout-address" id="checkout-address-label">Delivery Street Address *</label>
+                  <input type="text" id="checkout-address" placeholder="e.g. Unit 14B, Sapphire Tower, Ortigas Center" required>
                 </div>
-                <div class="checkout-form-group">
-                  <label class="checkout-form-label" for="checkout-city">City / Municipality *</label>
-                  <input type="text" id="checkout-city" placeholder="e.g. Pasig City" required>
+
+                <div class="checkout-grid-2" style="margin-bottom: 1.25rem;">
+                  <div class="checkout-form-group">
+                    <label class="checkout-form-label" for="checkout-city" id="checkout-city-label">City / Municipality *</label>
+                    <input type="text" id="checkout-city" placeholder="e.g. Pasig City" required>
+                  </div>
+                  <div class="checkout-form-group">
+                    <label class="checkout-form-label" for="checkout-postal">Postal Code</label>
+                    <input type="text" id="checkout-postal" placeholder="e.g. 1600">
+                  </div>
                 </div>
               </div>
 
-              <div class="checkout-form-group" id="checkout-address-group">
-                <label class="checkout-form-label" for="checkout-address" id="checkout-address-label">Delivery Street
-                  Address *</label>
-                <input type="text" id="checkout-address" placeholder="e.g. Unit 14B, Sapphire Tower, Ortigas Center"
-                  required>
-              </div>
+              <!-- IN-STORE PICK-UP ONLY INFO BLOCK -->
+              <div id="checkout-pickup-info" style="display: none; margin-bottom: 1.25rem;">
+                <div class="checkout-pickup-card">
+                  <div class="checkout-pickup-header">
+                    <div class="checkout-pickup-badge">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                      </svg>
+                      Store Collection Counter
+                    </div>
+                    <span class="checkout-pickup-free-tag">FREE PICK-UP</span>
+                  </div>
 
-              <div class="checkout-grid-2" style="margin-bottom: 1.5rem;">
-                <div class="checkout-form-group">
-                  <label class="checkout-form-label" for="checkout-postal">Postal Code</label>
-                  <input type="text" id="checkout-postal" placeholder="e.g. 1600">
-                </div>
-                <div class="checkout-form-group">
-                  <label class="checkout-form-label" for="checkout-country">Country</label>
-                  <input type="text" id="checkout-country" value="Philippines" readonly style="opacity: 0.7;">
+                  <div class="checkout-pickup-body">
+                    <div class="checkout-pickup-store-name">100201 Football Shop Counter</div>
+                    <div class="checkout-pickup-address">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                      </svg>
+                      <span>Unit 14B, Sapphire Tower, Ortigas Center, Pasig City, Metro Manila</span>
+                    </div>
+
+                    <div class="checkout-pickup-meta-grid">
+                      <div class="checkout-pickup-meta-item">
+                        <span class="meta-label">Operating Hours</span>
+                        <span class="meta-value">Mon – Sat: 10:00 AM – 8:00 PM</span>
+                      </div>
+                      <div class="checkout-pickup-meta-item">
+                        <span class="meta-label">Preparation Time</span>
+                        <span class="meta-value" style="color: var(--accent-pitch);">1–2 Hours (Same Day)</span>
+                      </div>
+                    </div>
+
+                    <div class="checkout-pickup-notice">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                      </svg>
+                      <span>Please present your <strong>Claim Code</strong> and a valid photo ID to our counter staff when claiming your kit order.</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1035,18 +1078,21 @@
                 <div class="checkout-form-group">
                   <label class="checkout-form-label" for="new-pm-type">Option Type</label>
                   <select id="new-pm-type" style="width: 100%;">
+                    <option value="cod">Cash on Delivery (COD)</option>
+                    <option value="pickup">Payment on Pick-up (Store Counter)</option>
                     <option value="gcash">GCash (Mobile Wallet)</option>
                     <option value="maya">Maya (PayMaya)</option>
                     <option value="bdo">BDO Bank Transfer</option>
                     <option value="card">Credit / Debit Card</option>
                   </select>
                 </div>
-                <div class="checkout-form-group">
-                  <label class="checkout-form-label" for="new-card-holder">Account Name / Cardholder</label>
+                <div id="new-pm-helper" style="font-size: 0.8rem; color: var(--accent-gold); margin-top: -0.35rem; margin-bottom: 0.75rem; background: rgba(251, 191, 36, 0.08); padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid rgba(251, 191, 36, 0.2); display: none;"></div>
+                <div class="checkout-form-group" id="new-pm-holder-group">
+                  <label class="checkout-form-label" for="new-card-holder" id="new-pm-holder-label">Account Name / Cardholder</label>
                   <input type="text" id="new-card-holder" placeholder="e.g. Juan Carlo Bautista">
                 </div>
-                <div class="checkout-form-group">
-                  <label class="checkout-form-label" for="new-card-number">Account / Mobile Number</label>
+                <div class="checkout-form-group" id="new-pm-number-group">
+                  <label class="checkout-form-label" for="new-card-number" id="new-pm-number-label">Account / Mobile Number</label>
                   <input type="text" id="new-card-number" placeholder="e.g. 0917-XXX-XXXX or Card #">
                 </div>
                 <label
@@ -1193,18 +1239,21 @@
             <div class="checkout-form-group">
               <label class="checkout-form-label" for="modal-pm-type">Payment Type</label>
               <select id="modal-pm-type" style="width: 100%;">
+                <option value="cod">Cash on Delivery (COD Preference)</option>
+                <option value="pickup">Payment on Pick-up (Store Counter)</option>
                 <option value="gcash">GCash (Philippines)</option>
                 <option value="maya">Maya (PayMaya)</option>
                 <option value="bdo">BDO Bank Transfer</option>
                 <option value="card">Credit / Debit Card</option>
               </select>
             </div>
-            <div class="checkout-form-group">
-              <label class="checkout-form-label" for="modal-pm-holder">Account / Holder Name</label>
+            <div id="modal-pm-helper" style="font-size: 0.8rem; color: var(--accent-gold); margin-top: -0.35rem; margin-bottom: 0.75rem; background: rgba(251, 191, 36, 0.08); padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid rgba(251, 191, 36, 0.2); display: none;"></div>
+            <div class="checkout-form-group" id="modal-pm-holder-group">
+              <label class="checkout-form-label" for="modal-pm-holder" id="modal-pm-holder-label">Account / Holder Name</label>
               <input type="text" id="modal-pm-holder" placeholder="e.g. Juan Carlo Bautista" required>
             </div>
-            <div class="checkout-form-group">
-              <label class="checkout-form-label" for="modal-pm-number">Mobile Number or Account / Card Number</label>
+            <div class="checkout-form-group" id="modal-pm-number-group">
+              <label class="checkout-form-label" for="modal-pm-number" id="modal-pm-number-label">Mobile Number or Account / Card Number</label>
               <input type="text" id="modal-pm-number" placeholder="0917-XXX-XXXX" required>
             </div>
             <label

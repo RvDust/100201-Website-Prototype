@@ -1,6 +1,6 @@
 // Admin Management Portal Controller for 100201 Football Shop
 
-import { store } from './store.js';
+import { store, isPickupOrder } from './store.js';
 import { auth } from './auth.js';
 import { compressImage } from './storefront.js';
 
@@ -356,6 +356,7 @@ function renderOrdersTable() {
   const paginatedOrders = orders.slice(startIndex, startIndex + ORDERS_PAGE_SIZE);
 
   tbody.innerHTML = paginatedOrders.map(order => {
+    const isPickup = isPickupOrder(order);
     const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
     const dateStr = new Date(order.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -365,27 +366,49 @@ function renderOrdersTable() {
           <div style="font-family:var(--font-display); font-weight:700; color:var(--text-primary); cursor:pointer;" class="admin-order-id-link" data-id="${order.id}">
             ${order.id}
           </div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${dateStr}</div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom: 0.25rem;">${dateStr}</div>
+          <span class="admin-fulfillment-chip ${isPickup ? 'chip-pickup' : 'chip-delivery'}">
+            ${isPickup ? 'STORE PICKUP' : 'DELIVERY'}
+          </span>
         </td>
         <td>
           <div style="font-weight:600;">${order.customer.name}</div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${order.customer.city}, ${order.customer.country}</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">${isPickup ? '📍 Store Counter Collection' : `${order.customer.city}, ${order.customer.country}`}</div>
         </td>
         <td>
           <span style="font-size:0.85rem;">${itemCount} jerseys (${order.items.map(i => i.size).join(', ')})</span>
         </td>
         <td>
           <strong style="font-family:var(--font-display); font-size:1.05rem; color:var(--text-primary);">${store.formatPrice(order.total)}</strong>
-          <div style="font-size:0.72rem; color:var(--text-muted);">${order.paymentMethod?.brand} &bull; ${order.paymentMethod?.last4}</div>
+          <div style="margin-top: 3px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+            ${order.paymentMethod?.type === 'cod' ? `
+              <span class="badge" style="background:#261B0B; color:#FBBF24; border:1px solid rgba(251,191,36,0.3); font-size:0.65rem; padding:1px 6px;">COD</span>
+              <span style="font-size:0.72rem; color:var(--text-muted);">Collect on Arrival</span>
+            ` : order.paymentMethod?.type === 'pickup' ? `
+              <span class="badge" style="background:#0d3824; color:#34D399; border:1px solid rgba(52,211,153,0.3); font-size:0.65rem; padding:1px 6px;">COUNTER</span>
+              <span style="font-size:0.72rem; color:var(--text-muted);">Pay at Desk</span>
+            ` : `
+              <span class="badge" style="background:rgba(0,125,254,0.15); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:0.65rem; padding:1px 6px;">${order.paymentMethod?.brand || 'PREPAID'}</span>
+              <span style="font-size:0.72rem; color:var(--text-muted);">${order.paymentMethod?.last4 ? `•••• ${order.paymentMethod.last4}` : 'Paid'}</span>
+            `}
+          </div>
         </td>
         <td>
           <select class="status-dropdown-select" data-order-id="${order.id}">
-            <option value="Order Confirmed" ${order.status === 'Order Confirmed' ? 'selected' : ''}>Confirmed</option>
-            <option value="Processing & Custom Printing" ${order.status === 'Processing & Custom Printing' ? 'selected' : ''}>Processing</option>
-            <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-            <option value="Out for Delivery" ${order.status === 'Out for Delivery' ? 'selected' : ''}>Out for Delivery</option>
-            <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-            <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            ${isPickup ? `
+              <option value="Order Confirmed" ${order.status === 'Order Confirmed' ? 'selected' : ''}>Confirmed</option>
+              <option value="Processing & Custom Printing" ${order.status === 'Processing & Custom Printing' ? 'selected' : ''}>Processing</option>
+              <option value="Ready for Pick-up" ${order.status === 'Ready for Pick-up' ? 'selected' : ''}>Ready for Pick-up</option>
+              <option value="Picked Up" ${order.status === 'Picked Up' || order.status === 'Delivered' ? 'selected' : ''}>Picked Up</option>
+              <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            ` : `
+              <option value="Order Confirmed" ${order.status === 'Order Confirmed' ? 'selected' : ''}>Confirmed</option>
+              <option value="Processing & Custom Printing" ${order.status === 'Processing & Custom Printing' ? 'selected' : ''}>Processing</option>
+              <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+              <option value="Out for Delivery" ${order.status === 'Out for Delivery' ? 'selected' : ''}>Out for Delivery</option>
+              <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+              <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            `}
           </select>
         </td>
         <td>
@@ -398,11 +421,21 @@ function renderOrdersTable() {
   }).join('');
 
   tbody.querySelectorAll('.status-dropdown-select').forEach(select => {
-    select.addEventListener('change', (e) => {
+    select.addEventListener('change', async (e) => {
       const orderId = e.target.dataset.orderId;
       const newStatus = e.target.value;
-      store.updateOrderStatus(orderId, newStatus);
+      const updatedOrder = store.updateOrderStatus(orderId, newStatus);
       window.showToast?.(`Order ${orderId} updated to "${newStatus}"!`, 'success');
+      
+      // Trigger status update email
+      if (updatedOrder) {
+        try {
+          const { apiClient } = await import('./apiClient.js');
+          await apiClient.sendStatusUpdateEmail(updatedOrder, newStatus);
+        } catch (err) {
+          console.error('Failed to send status update email:', err);
+        }
+      }
     });
   });
 

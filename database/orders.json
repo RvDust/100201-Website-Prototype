@@ -1,5 +1,295 @@
 [
   {
+    "id": "100201-ORD-4618",
+    "date": "2026-10-10T12:03:34.589Z",
+    "fulfillmentMode": "pickup",
+    "customer": {
+      "name": "Caldy",
+      "email": "calderetangmanok@gmail.com",
+      "phone": "+639617668255",
+      "address": "100201 Football Shop Counter, Ortigas Center",
+      "city": "Pasig City",
+      "postalCode": "1605",
+      "country": "Philippines",
+      "fulfillmentMode": "pickup"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-home",
+        "name": "Barcelona '26/'27 Home Kit",
+        "size": "XL",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-home-1.jpg",
+        "customization": null
+      },
+      {
+        "id": "fb-kit-barca-2627-away",
+        "name": "Barcelona '26/'27 Away Kit",
+        "size": "S",
+        "quantity": 4,
+        "price": 1100,
+        "image": "assets/products/barca-2627-away-1.jpg",
+        "customization": null
+      }
+    ],
+    "subtotal": 5500,
+    "discount": 0,
+    "shipping": 0,
+    "total": 5500,
+    "paymentMethod": {
+      "type": "pickup",
+      "brand": "Payment on Pick-up",
+      "accountName": "Store Collection Desk",
+      "accountNumber": "Pay at Store Counter",
+      "last4": "COUNTER",
+      "details": "Collect payment at store counter upon claiming"
+    },
+    "status": "Order Confirmed",
+    "carrier": "100201 Store Pick-up Counter",
+    "trackingNumber": "PK-100201-595749",
+    "estimatedDelivery": "Ready for Pick-up in 1-2 Hours (Same-Day Store Collection)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-10-10 20:03",
+        "description": "Reservation secured for store collection. Payment will be settled at 100201 counter.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic kit preparation & heat-press customization in progress.",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pick-up",
+        "timestamp": null,
+        "description": "Packaged & waiting at 100201 store counter for customer collection.",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "timestamp": null,
+        "description": "Order claimed & released to customer at 100201 store counter.",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "100201-ORD-3393",
+    "date": "2026-09-27T09:25:01.455Z",
+    "fulfillmentMode": "pickup",
+    "customer": {
+      "name": "PRINCESS LOUELLA AGUI",
+      "email": "agui.princess@gmail.com",
+      "phone": "+639617668255",
+      "address": "100201 Football Shop Counter, Ortigas Center",
+      "city": "Pasig City",
+      "postalCode": "1605",
+      "country": "Philippines",
+      "fulfillmentMode": "pickup"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-away",
+        "name": "Barcelona '26/'27 Away Kit",
+        "size": "XL",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-away-1.jpg",
+        "customization": null
+      }
+    ],
+    "subtotal": 1100,
+    "discount": 0,
+    "shipping": 0,
+    "total": 1100,
+    "paymentMethod": {
+      "type": "card",
+      "brand": "Credit / Debit Card",
+      "last4": " JCB"
+    },
+    "status": "Order Confirmed",
+    "carrier": "100201 Store Pick-up Counter",
+    "trackingNumber": "PK-100201-220893",
+    "estimatedDelivery": "Ready for Pick-up in 1-2 Hours (Same-Day Store Collection)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-27 17:25",
+        "description": "Payment acknowledged by 100201 Football Shop. Jersey reservation secured.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic kit preparation & heat-press customization in progress.",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pick-up",
+        "timestamp": null,
+        "description": "Packaged & waiting at 100201 store counter for customer collection.",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "timestamp": null,
+        "description": "Order claimed & released to customer at 100201 store counter.",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "100201-ORD-1068",
+    "date": "2026-09-16T02:12:48.722Z",
+    "fulfillmentMode": "delivery",
+    "customer": {
+      "name": "PRINCESS LOUELLA AGUI",
+      "email": "agui.princess@gmail.com",
+      "phone": "+639617668255",
+      "address": "Unit 14B, Sapphire Tower, Ortigas Center",
+      "city": "Makati City",
+      "postalCode": "1213",
+      "country": "Philippines",
+      "fulfillmentMode": "delivery"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-away",
+        "name": "Barcelona '26/'27 Away Kit",
+        "size": "L",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-away-1.jpg",
+        "customization": null
+      }
+    ],
+    "subtotal": 1100,
+    "discount": 0,
+    "shipping": 120,
+    "total": 1220,
+    "paymentMethod": {
+      "type": "gcash",
+      "brand": "GCash",
+      "last4": "8255"
+    },
+    "status": "Order Confirmed",
+    "carrier": "J&T Express / Store Dispatch",
+    "trackingNumber": "JT-100201-757631",
+    "estimatedDelivery": "2-4 Business Days (Nationwide PH)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-16 10:12",
+        "description": "Payment acknowledged by 100201 Football Shop. Jersey reservation secured.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic heat-press printing applied at store workshop.",
+        "completed": false
+      },
+      {
+        "status": "Shipped",
+        "timestamp": null,
+        "description": "Dispatched via courier partner (J&T / LBC Express).",
+        "completed": false
+      },
+      {
+        "status": "Out for Delivery",
+        "timestamp": null,
+        "description": "Courier rider is on delivery route.",
+        "completed": false
+      },
+      {
+        "status": "Delivered",
+        "timestamp": null,
+        "description": "Delivered to recipient address or collected in-store.",
+        "completed": false
+      }
+    ]
+  },
+  {
+    "id": "100201-ORD-8733",
+    "date": "2026-09-16T02:05:02.716Z",
+    "fulfillmentMode": "pickup",
+    "customer": {
+      "name": "PRINCESS LOUELLA AGUI",
+      "email": "agui.princess@gmail.com",
+      "phone": "+639617668255",
+      "address": "100201 Football Shop Counter, Ortigas Center, Pasig City",
+      "city": "Makati City",
+      "postalCode": "1213",
+      "country": "Philippines",
+      "fulfillmentMode": "pickup"
+    },
+    "items": [
+      {
+        "id": "fb-kit-barca-2627-home",
+        "name": "Barcelona '26/'27 Home Kit",
+        "size": "M",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-home-1.jpg",
+        "customization": null
+      },
+      {
+        "id": "fb-kit-barca-2627-home",
+        "name": "Barcelona '26/'27 Home Kit",
+        "size": "S",
+        "quantity": 1,
+        "price": 1100,
+        "image": "assets/products/barca-2627-home-1.jpg",
+        "customization": null
+      }
+    ],
+    "subtotal": 2200,
+    "discount": 0,
+    "shipping": 0,
+    "total": 2200,
+    "paymentMethod": {
+      "type": "pickup",
+      "brand": "Payment on Pick-up",
+      "accountName": "Store Collection Desk",
+      "accountNumber": "Pay at Store Counter",
+      "last4": "COUNTER",
+      "details": "Collect payment at store counter upon claiming"
+    },
+    "status": "Order Confirmed",
+    "carrier": "100201 Store Pick-up Counter",
+    "trackingNumber": "PK-100201-663035",
+    "estimatedDelivery": "Ready for Pick-up in 1-2 Hours (Same-Day Store Collection)",
+    "timeline": [
+      {
+        "status": "Order Confirmed",
+        "timestamp": "2026-09-16 10:05",
+        "description": "Reservation secured for store collection. Payment will be settled at 100201 counter.",
+        "completed": true
+      },
+      {
+        "status": "Processing & Custom Printing",
+        "timestamp": null,
+        "description": "Authentic kit preparation & heat-press customization in progress.",
+        "completed": false
+      },
+      {
+        "status": "Ready for Pick-up",
+        "timestamp": null,
+        "description": "Packaged & waiting at 100201 store counter for customer collection.",
+        "completed": false
+      },
+      {
+        "status": "Picked Up",
+        "timestamp": null,
+        "description": "Order claimed & released to customer at 100201 store counter.",
+        "completed": false
+      }
+    ]
+  },
+  {
     "id": "100201-ORD-4032",
     "date": "2026-09-15T16:32:29.776Z",
     "customer": {
@@ -71,6 +361,7 @@
   {
     "id": "100201-ORD-8141",
     "date": "2026-09-10T08:00:51.106Z",
+    "fulfillmentMode": "pickup",
     "customer": {
       "name": "PRINCESS LOUELLA AGUI",
       "email": "agui.princess@gmail.com",
@@ -78,7 +369,8 @@
       "address": "100201 Football Shop Counter, Ortigas Center, Pasig City",
       "city": "Makati City",
       "postalCode": "1213",
-      "country": "Philippines"
+      "country": "Philippines",
+      "fulfillmentMode": "pickup"
     },
     "items": [
       {
@@ -93,17 +385,17 @@
     ],
     "subtotal": 1100,
     "discount": 0,
-    "shipping": 120,
-    "total": 1220,
+    "shipping": 0,
+    "total": 1100,
     "paymentMethod": {
       "type": "gcash",
       "brand": "GCash",
       "last4": "8255"
     },
-    "status": "Order Confirmed",
-    "carrier": "J&T Express / Store Dispatch",
-    "trackingNumber": "JT-100201-908184",
-    "estimatedDelivery": "2-4 Business Days (Nationwide PH)",
+    "status": "Picked Up",
+    "carrier": "100201 Store Pick-up Counter",
+    "trackingNumber": "PK-100201-908184",
+    "estimatedDelivery": "Claimed & Picked Up at Store Counter",
     "timeline": [
       {
         "status": "Order Confirmed",
@@ -113,27 +405,21 @@
       },
       {
         "status": "Processing & Custom Printing",
-        "timestamp": null,
-        "description": "Authentic heat-press printing applied at store workshop.",
-        "completed": false
+        "timestamp": "2026-09-16 09:32",
+        "description": "Authentic kit preparation & heat-press customization in progress.",
+        "completed": true
       },
       {
-        "status": "Shipped",
-        "timestamp": null,
-        "description": "Dispatched via courier partner (J&T / LBC Express).",
-        "completed": false
+        "status": "Ready for Pick-up",
+        "timestamp": "2026-09-16 09:33",
+        "description": "Packaged & waiting at 100201 store counter for customer collection.",
+        "completed": true
       },
       {
-        "status": "Out for Delivery",
-        "timestamp": null,
-        "description": "Courier rider is on delivery route.",
-        "completed": false
-      },
-      {
-        "status": "Delivered",
-        "timestamp": null,
-        "description": "Delivered to recipient address or collected in-store.",
-        "completed": false
+        "status": "Picked Up",
+        "timestamp": "2026-09-16 09:35",
+        "description": "Order claimed & released to customer at 100201 store counter.",
+        "completed": true
       }
     ]
   },
@@ -209,6 +495,7 @@
   {
     "id": "100201-ORD-5021",
     "date": "2026-09-10T06:10:00.185Z",
+    "fulfillmentMode": "pickup",
     "customer": {
       "name": "Sinaia Rodriguez",
       "email": "rodzjeanne@gmail.com",
@@ -216,7 +503,8 @@
       "address": "100201 Football Shop Counter, Ortigas Center, Pasig City",
       "city": "Makati City",
       "postalCode": "1213",
-      "country": "Philippines"
+      "country": "Philippines",
+      "fulfillmentMode": "pickup"
     },
     "items": [
       {
@@ -231,17 +519,17 @@
     ],
     "subtotal": 1100,
     "discount": 110,
-    "shipping": 120,
-    "total": 1110,
+    "shipping": 0,
+    "total": 990,
     "paymentMethod": {
       "type": "gcash",
       "brand": "GCash",
       "last4": "2219"
     },
-    "status": "Shipped",
-    "carrier": "J&T Express / Store Dispatch",
-    "trackingNumber": "JT-100201-202691",
-    "estimatedDelivery": "2-4 Business Days (Nationwide PH)",
+    "status": "Ready for Pick-up",
+    "carrier": "100201 Store Pick-up Counter",
+    "trackingNumber": "PK-100201-202691",
+    "estimatedDelivery": "Ready for Collection Now at Store Counter",
     "timeline": [
       {
         "status": "Order Confirmed",
@@ -252,25 +540,19 @@
       {
         "status": "Processing & Custom Printing",
         "timestamp": "2026-09-10 14:13",
-        "description": "Authentic heat-press printing applied at store workshop.",
+        "description": "Authentic kit preparation & heat-press customization in progress.",
         "completed": true
       },
       {
-        "status": "Shipped",
-        "timestamp": "2026-09-10 14:13",
-        "description": "Dispatched via courier partner (J&T / LBC Express).",
+        "status": "Ready for Pick-up",
+        "timestamp": "2026-09-10 14:30",
+        "description": "Packaged & waiting at 100201 store counter for customer collection.",
         "completed": true
       },
       {
-        "status": "Out for Delivery",
+        "status": "Picked Up",
         "timestamp": null,
-        "description": "Courier rider is on delivery route.",
-        "completed": false
-      },
-      {
-        "status": "Delivered",
-        "timestamp": null,
-        "description": "Delivered to recipient address or collected in-store.",
+        "description": "Order claimed & released to customer at 100201 store counter.",
         "completed": false
       }
     ]

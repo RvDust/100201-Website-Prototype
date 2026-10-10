@@ -306,6 +306,15 @@ export const INITIAL_PRODUCTS = [
 // Payment methods tailored to 100201 Football Shop (Philippines + International)
 export const INITIAL_PAYMENT_METHODS = [
   {
+    id: "pm-cod-00",
+    type: "cod",
+    brand: "Cash on Delivery (COD)",
+    accountName: "Pay Cash Upon Delivery",
+    accountNumber: "Exact Cash Upon Arrival",
+    isDefault: false,
+    badgeText: "COD"
+  },
+  {
     id: "pm-gcash-01",
     type: "gcash",
     brand: "GCash",

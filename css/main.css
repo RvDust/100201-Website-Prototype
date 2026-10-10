@@ -670,6 +670,19 @@ input:focus, select:focus, textarea:focus {
   border: 1px solid #FFFFFF;
 }
 
+.badge-status-ready-pickup {
+  background: #1E1A0F;
+  color: #FBBF24;
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.15);
+}
+
+.badge-status-picked-up {
+  background: #FFFFFF;
+  color: #08080A;
+  border: 1px solid #FFFFFF;
+}
+
 .badge-status-cancelled {
   background: #18181D;
   color: #FB7185;
@@ -683,7 +696,7 @@ input:focus, select:focus, textarea:focus {
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 1000;
+  z-index: 1500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -763,7 +776,7 @@ input:focus, select:focus, textarea:focus {
 .toast-container {
   position: fixed;
   bottom: 2rem;
-  right: 2rem;
+  left: 2rem;
   z-index: 2000;
   display: flex;
   flex-direction: column;

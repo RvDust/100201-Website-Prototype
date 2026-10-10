@@ -39,6 +39,51 @@ function setupPaymentsModalEvents() {
   if (addPmForm) {
     addPmForm.addEventListener('submit', handleAddNewPaymentMethod);
   }
+
+  const modalPmType = document.getElementById('modal-pm-type');
+  const modalPmHelper = document.getElementById('modal-pm-helper');
+  const modalPmHolderLabel = document.getElementById('modal-pm-holder-label');
+  const modalPmNumberLabel = document.getElementById('modal-pm-number-label');
+  const modalPmNumberGroup = document.getElementById('modal-pm-number-group');
+  const modalPmNumberInput = document.getElementById('modal-pm-number');
+
+  function updateModalPmFormFields() {
+    if (!modalPmType) return;
+    const val = modalPmType.value;
+    if (val === 'cod') {
+      if (modalPmHelper) {
+        modalPmHelper.style.display = 'block';
+        modalPmHelper.innerHTML = '💵 <strong>Cash on Delivery (COD):</strong> Saved as your preferred payment method for courier deliveries. No bank account required.';
+      }
+      if (modalPmHolderLabel) modalPmHolderLabel.textContent = 'Recipient Name';
+      if (modalPmNumberGroup) modalPmNumberGroup.style.display = 'none';
+      if (modalPmNumberInput) modalPmNumberInput.required = false;
+    } else if (val === 'pickup') {
+      if (modalPmHelper) {
+        modalPmHelper.style.display = 'block';
+        modalPmHelper.innerHTML = '📍 <strong>Payment on Pick-up:</strong> Settle payment at the 100201 store counter via Cash, GCash QR, or card terminal when claiming your kit.';
+      }
+      if (modalPmHolderLabel) modalPmHolderLabel.textContent = 'Claimant Name';
+      if (modalPmNumberGroup) modalPmNumberGroup.style.display = 'none';
+      if (modalPmNumberInput) modalPmNumberInput.required = false;
+    } else {
+      if (modalPmHelper) {
+        modalPmHelper.style.display = val === 'gcash' || val === 'maya' || val === 'bdo' ? 'block' : 'none';
+        if (val === 'gcash') modalPmHelper.innerHTML = '📱 <strong>GCash:</strong> Transfer to 0917-555-1201 (100201 Football Shop).';
+        else if (val === 'maya') modalPmHelper.innerHTML = '📱 <strong>Maya:</strong> Transfer to 0917-555-1201 (100201 Football Shop).';
+        else if (val === 'bdo') modalPmHelper.innerHTML = '🏦 <strong>BDO Unibank:</strong> Account 0041-8890-2101 (100201 SPORTS).';
+      }
+      if (modalPmHolderLabel) modalPmHolderLabel.textContent = val === 'card' ? 'Cardholder Name' : 'Account / Holder Name';
+      if (modalPmNumberLabel) modalPmNumberLabel.textContent = val === 'card' ? 'Card Number (16 digits)' : 'Mobile Number or Account / Card Number';
+      if (modalPmNumberGroup) modalPmNumberGroup.style.display = 'block';
+      if (modalPmNumberInput) modalPmNumberInput.required = true;
+    }
+  }
+
+  if (modalPmType) {
+    modalPmType.addEventListener('change', updateModalPmFormFields);
+    updateModalPmFormFields();
+  }
 }
 
 export function openPaymentsModal() {
@@ -90,21 +135,37 @@ export function renderPaymentsManagerList() {
           <line x1="1" y1="10" x2="23" y2="10"></line>
         </svg>
         <p style="margin-bottom: 0.35rem; font-weight: 700; color: var(--text-primary);">No saved payment options yet</p>
-        <p style="margin: 0; font-size: 0.8rem;">Add your GCash, Maya, Bank Transfer, or card below for fast 1-click checkout on your account.</p>
+        <p style="margin: 0; font-size: 0.8rem;">Add your GCash, Maya, COD, or Bank Transfer below for fast 1-click checkout on your account.</p>
       </div>
     `;
     return;
   }
 
   container.innerHTML = methods.map(pm => {
-    const badgeText = pm.badgeText || (pm.type === 'gcash' ? 'GCASH' : pm.type === 'maya' ? 'MAYA' : pm.type === 'bdo' ? 'BDO' : 'CARD');
-    const title = pm.brand || (pm.type === 'gcash' ? 'GCash' : pm.type === 'maya' ? 'Maya' : 'Credit Card');
+    const badgeClass = pm.type === 'cod' ? 'pm-icon-cod' :
+                       pm.type === 'pickup' ? 'pm-icon-pickup' :
+                       pm.type === 'gcash' ? 'pm-icon-gcash' :
+                       pm.type === 'maya' ? 'pm-icon-maya' :
+                       pm.type === 'bdo' || pm.type === 'bank' ? 'pm-icon-bdo' : 'pm-icon-card';
+    const badgeText = pm.badgeText || (
+      pm.type === 'cod' ? 'COD' :
+      pm.type === 'pickup' ? 'PICKUP' :
+      pm.type === 'gcash' ? 'GCASH' :
+      pm.type === 'maya' ? 'MAYA' :
+      pm.type === 'bdo' || pm.type === 'bank' ? 'BDO' : 'CARD'
+    );
+    const title = pm.brand || (
+      pm.type === 'cod' ? 'Cash on Delivery (COD)' :
+      pm.type === 'pickup' ? 'Payment on Pick-up' :
+      pm.type === 'gcash' ? 'GCash' :
+      pm.type === 'maya' ? 'Maya' : 'Credit Card'
+    );
     const sub = pm.accountNumber || (pm.last4 ? `•••• ${pm.last4}` : pm.accountName);
 
     return `
       <div class="payment-method-card" data-pm-id="${pm.id}">
         <div class="pm-left">
-          <div class="pm-icon-badge" style="font-weight:800; font-size:0.65rem; color:#080A0F;">${badgeText}</div>
+          <div class="pm-icon-badge ${badgeClass}" style="font-weight:800; font-size:0.68rem;">${badgeText}</div>
           <div class="pm-details">
             <span class="pm-title">${title}</span>
             <span class="pm-sub">${sub} &bull; ${pm.accountName || pm.cardHolder || ''}</span>
@@ -154,31 +215,48 @@ function handleAddNewPaymentMethod(e) {
     return;
   }
 
+  const customer = auth.getCurrentCustomer();
   const type = document.getElementById('modal-pm-type')?.value || 'gcash';
-  const name = document.getElementById('modal-pm-holder')?.value.trim();
+  const name = document.getElementById('modal-pm-holder')?.value.trim() || customer?.name || 'Customer';
   const number = document.getElementById('modal-pm-number')?.value.trim();
   const isDefault = document.getElementById('modal-pm-default')?.checked;
 
-  if (!name || !number) {
-    window.showToast?.('Please enter required details', 'error');
-    return;
-  }
+  let brand = 'GCash';
+  let badgeText = 'GCASH';
+  let accountNumber = number;
+  let last4 = '0000';
 
-  const brand = type === 'gcash' ? 'GCash' : type === 'maya' ? 'Maya' : type === 'bdo' ? 'BDO Unibank' : 'Visa';
-  const badgeText = type === 'gcash' ? 'GCASH' : type === 'maya' ? 'MAYA' : type === 'bdo' ? 'BDO' : 'VISA';
+  if (type === 'cod') {
+    brand = 'Cash on Delivery (COD)';
+    badgeText = 'COD';
+    accountNumber = 'Exact Cash Upon Arrival';
+    last4 = 'CASH';
+  } else if (type === 'pickup') {
+    brand = 'Payment on Pick-up';
+    badgeText = 'PICKUP';
+    accountNumber = 'Pay at Store Counter';
+    last4 = 'COUNTER';
+  } else {
+    if (!name || !number) {
+      window.showToast?.('Please enter required details', 'error');
+      return;
+    }
+    brand = type === 'gcash' ? 'GCash' : type === 'maya' ? 'Maya' : type === 'bdo' ? 'BDO Unibank' : 'Visa';
+    badgeText = type === 'gcash' ? 'GCASH' : type === 'maya' ? 'MAYA' : type === 'bdo' ? 'BDO' : 'VISA';
+    last4 = number.replace(/\D/g, '').slice(-4);
+  }
 
   store.addPaymentMethod({
     type,
     brand,
     accountName: name,
-    accountNumber: number,
+    accountNumber,
     cardHolder: name,
-    last4: number.replace(/\D/g, '').slice(-4),
+    last4,
     badgeText,
     isDefault
   });
 
-  const customer = auth.getCurrentCustomer();
   window.showToast?.(`New ${brand} option saved to ${customer?.name || 'your'} account!`, 'success');
 
   const addPmForm = document.getElementById('modal-add-pm-form');
