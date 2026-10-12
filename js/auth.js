@@ -875,20 +875,25 @@ function setupHeaderAccountButton() {
 
     const logoutBtn = document.getElementById('user-dropdown-logout');
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdown.classList.remove('open');
+
         const wasMerchant = auth.isMerchantLoggedIn();
         if (wasMerchant) {
           auth.merchantLogout();
           window.showToast?.('Merchant session closed.', 'info');
-          window.navigateToView?.('storefront');
         } else {
           auth.customerLogout();
           window.showToast?.('Signed out successfully.', 'info');
-          if (store.getView() === 'tracker') {
-            window.navigateToView?.('storefront');
-          }
         }
-        dropdown.classList.remove('open');
+
+        // Also ensure any hanging session or customer data is cleanly updated in UI
+        updateHeaderAccountUI();
+        if (store.getView() !== 'storefront') {
+          window.navigateToView?.('storefront');
+        }
       });
     }
 

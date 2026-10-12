@@ -7,6 +7,7 @@ import { initPayments, openPaymentsModal, closePaymentsModal } from './payments.
 import { initTracker, trackOrder, renderTracker } from './tracker.js';
 import { initAdmin, renderAdminDashboard } from './admin.js';
 import { initAuth, auth, openCustomerAuthModal, closeCustomerAuthModal } from './auth.js';
+import { initThemeToggle } from './theme.js';
 
 // Global exposed methods
 window.showToast = showToast;
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupGlobalNavigation();
   setupKeyboardShortcuts();
   setupSizeChartModal();
+  initThemeToggle();
 
   // Reactive sync: When customer logs in/out, refresh payment options
   auth.subscribe(() => {

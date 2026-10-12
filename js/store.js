@@ -51,7 +51,7 @@ class Store {
   init() {
     // Products
     const savedProducts = localStorage.getItem('100201_products');
-    const catalogVersion = '100201_v4_all_kits';
+    const catalogVersion = '100201_v5_kits_900';
     if (!savedProducts || localStorage.getItem('100201_catalog_version') !== catalogVersion) {
       localStorage.setItem('100201_products', JSON.stringify(INITIAL_PRODUCTS));
       localStorage.setItem('100201_catalog_version', catalogVersion);
@@ -251,6 +251,9 @@ class Store {
       return;
     }
 
+    const isCustomized = Boolean(customization && customization.trim());
+    const unitPrice = isCustomized ? 1100 : (product.price || 900);
+
     if (existingIndex > -1) {
       this.cart[existingIndex].quantity = newQuantity;
     } else {
@@ -259,7 +262,7 @@ class Store {
         productId: product.id,
         name: product.name,
         club: product.club,
-        price: product.price,
+        price: unitPrice,
         image: product.image,
         size,
         customization: customization.trim(),

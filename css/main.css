@@ -51,6 +51,31 @@
   --container-width: 1280px;
 }
 
+/* Light Theme Color Tokens */
+[data-theme="light"] {
+  --bg-app: #F5F6F9;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #F0F2F6;
+  --bg-surface-glass: rgba(255, 255, 255, 0.94);
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8F9FD;
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.14);
+  --border-strong: rgba(0, 0, 0, 0.28);
+  --border-glow: rgba(0, 0, 0, 0.15);
+
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-inverse: #FFFFFF;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --shadow-glow: 0 0 25px rgba(0, 0, 0, 0.08);
+}
+
 /* Global Reset */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -147,6 +172,16 @@ input:focus, select:focus, textarea:focus {
 
 @media (max-width: 600px) {
   .container {
+    padding: 0 1rem;
+  }
+  .cart-trigger-btn {
+    display: none;
+  }
+  .brand-logo-img {
+    height: 30px;
+    width: 30px;
+  }
+}
     padding: 0 1rem;
   }
 }

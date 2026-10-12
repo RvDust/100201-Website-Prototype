@@ -661,7 +661,7 @@ function renderQuickViewModalContent(product) {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
               <span>Official Heat-Press Custom Printing</span>
             </div>
-            <span style="font-size: 0.72rem; color: var(--accent-pitch); font-weight: 700;">OPTIONAL / FREE</span>
+            <span id="custom-pricing-tag" style="font-size: 0.75rem; color: var(--accent-pitch); font-weight: 700;">+₱200 (₱1,100 total)</span>
           </div>
 
           <div class="custom-print-grid">
@@ -673,7 +673,7 @@ function renderQuickViewModalContent(product) {
           <div class="jersey-preview-canvas" id="jersey-preview-box">
             <div class="jersey-preview-name" id="preview-render-name">YOUR NAME</div>
             <div class="jersey-preview-num" id="preview-render-num">10</div>
-            <div class="jersey-preview-placeholder" id="preview-render-sub">Type above to preview live heat-press printing</div>
+            <div class="jersey-preview-placeholder" id="preview-render-sub">Type name or number above to customize (₱1,100 each)</div>
           </div>
         </div>
 
@@ -783,13 +783,15 @@ function renderQuickViewModalContent(product) {
 
     if (previewSub) {
       if (rawName || rawNum) {
-        previewSub.textContent = `Applied to ${product.club} ${product.season} Backplate`;
+        previewSub.textContent = `Applied to ${product.club} ${product.season} Backplate (Custom: ₱1,100 each)`;
         previewSub.style.color = 'var(--accent-pitch)';
       } else {
-        previewSub.textContent = 'Type above to preview live heat-press printing';
+        previewSub.textContent = 'Type name or number above to customize (₱1,100 each)';
         previewSub.style.color = 'var(--text-muted)';
       }
     }
+
+    updateQuantityDisplay();
   }
 
   if (nameInput) nameInput.addEventListener('input', updateLetteringPreview);
@@ -804,7 +806,9 @@ function renderQuickViewModalContent(product) {
 
   function updateQuantityDisplay() {
     if (qtyVal) qtyVal.textContent = modalQuantity;
-    const total = product.price * modalQuantity;
+    const isCustomized = Boolean(modalCustomName || modalCustomNumber);
+    const unitPrice = isCustomized ? 1100 : (product.price || 900);
+    const total = unitPrice * modalQuantity;
     if (priceDisplay) priceDisplay.textContent = store.formatPrice(total);
     if (addBtnText) addBtnText.textContent = `Add to Bag \u2022 ${store.formatPrice(total)}`;
   }

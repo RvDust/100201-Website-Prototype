@@ -162,6 +162,24 @@
           </div>
         </div>
 
+        <!-- Theme Toggle Button (Light/Dark Mode) -->
+        <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Theme Mode" title="Toggle Light / Dark Mode">
+          <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display: none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
         <!-- Cart Trigger Button -->
         <button id="cart-toggle-btn" class="cart-trigger-btn" aria-label="Open Shopping Bag" title="View Bag">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -440,6 +458,7 @@
                 <button class="type-chip active" data-type="all">All Versions</button>
                 <button class="type-chip" data-type="Home">Home</button>
                 <button class="type-chip" data-type="Away">Away</button>
+                <button class="type-chip" data-type="Goalkeeper">Goalkeeper</button>
                 <button class="type-chip" data-type="Retro">Retro Classics</button>
               </div>
 
@@ -1474,6 +1493,7 @@
                 <option value="Home">Home</option>
                 <option value="Away">Away</option>
                 <option value="Third">Third</option>
+                <option value="Goalkeeper">Goalkeeper</option>
                 <option value="Retro">Retro Classics</option>
                 <option value="Special">Special Edition</option>
               </select>
@@ -1484,7 +1504,7 @@
           <div class="crud-grid-3">
             <div class="crud-form-group">
               <label class="crud-form-label" for="crud-price">Price (₱ PHP) *</label>
-              <input type="number" id="crud-price" min="1" step="1" value="1100" required>
+              <input type="number" id="crud-price" min="1" step="1" value="900" required>
             </div>
             <div class="crud-form-group">
               <label class="crud-form-label" for="crud-original-price">Original Price (₱)</label>
